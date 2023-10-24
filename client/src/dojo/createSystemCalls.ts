@@ -1,5 +1,6 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import { Account } from "starknet";
+import { poseidonHashMany } from 'micro-starknet';
 import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
@@ -10,15 +11,52 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
-    { Position, Moves }: ClientComponents
+    { Boat, Game, Moves }: ClientComponents
 ) {
 
-    const spawn = async (signer: Account) => {
+    const create = async (
+        signer: Account, 
+        ip: number,
+        seed: number,
+        pseudo: string
+    ) => {
+        console.log("CREAAATE");
+        // const entityId = signer.address.toString() as EntityIndex;
+        console.log('who', BigInt(ip).toString(16));
 
+
+        // const gameId = uuid();
+        // Game.addOverride(gameId, {
+        //     entity: entityId,
+        //     value: { game_id: gameId, over: 0, seed: seed },
+        // });
+
+        try {
+            const tx = await execute(signer, "actions", 'create', [ip, seed, pseudo]);
+            const events = getEvents(
+                await signer.waitForTransaction(tx.transaction_hash,
+                    { retryInterval: 100 }
+                )
+            );
+            console.log('events', events);
+            
+            
+            setComponentsFromEvents(contractComponents, events);
+
+        } catch (e) {
+            console.log(e)
+            //Game.removeOverride(gameId);
+        } finally {
+            //Game.removeOverride(gameId);
+        }
+    };
+
+    const spawn = async (signer: Account) => {
+        console.log("SPAWWWWN");
         const entityId = signer.address.toString() as EntityIndex;
 
         const positionId = uuid();
-        Position.addOverride(positionId, {
+        Boat.addOverride(positionId, {
             entity: entityId,
             value: { x: 10, y: 10 },
         });
@@ -41,10 +79,10 @@ export function createSystemCalls(
 
         } catch (e) {
             console.log(e)
-            Position.removeOverride(positionId);
+            Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         } finally {
-            Position.removeOverride(positionId);
+            Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         }
     };
@@ -53,9 +91,9 @@ export function createSystemCalls(
         const entityId = signer.address.toString() as EntityIndex;
 
         const positionId = uuid();
-        Position.addOverride(positionId, {
+        Boat.addOverride(positionId, {
             entity: entityId,
-            value: updatePositionWithDirection(direction, getComponentValue(Position, entityId)),
+            value: updatePositionWithDirection(direction, getComponentValue(Boat, entityId)),
         });
 
         const movesId = uuid();
@@ -76,16 +114,17 @@ export function createSystemCalls(
 
         } catch (e) {
             console.log(e)
-            Position.removeOverride(positionId);
+            Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         } finally {
-            Position.removeOverride(positionId);
+            Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         }
 
     };
 
     return {
+        create,
         spawn,
         move
     };
@@ -96,4 +135,15 @@ export enum Direction {
     Right = 2,
     Up = 3,
     Down = 4,
+}
+
+// DISCUSSION: MUD expects Numbers, but entities in Starknet are BigInts (from poseidon hash)
+// so I am converting them to Numbers here, but it means that there is a bigger risk of collisions
+export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
+    if (keys.length === 1) {
+    return parseInt(keys[0].toString()) as EntityIndex;
+    }
+    // calculate the poseidon hash of the keys
+    const poseidon = poseidonHashMany([BigInt(keys.length), ...keys]);
+    return parseInt(poseidon.toString()) as EntityIndex;
 }

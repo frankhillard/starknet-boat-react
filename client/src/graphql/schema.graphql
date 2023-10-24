@@ -9,11 +9,16 @@ query getEntities {
             remaining
             last_direction
           }
-          ... on Position {
+          ... on Boat {
             vec {
               x
               y
             }
+          }
+          ... on Game {
+            game_id
+            over
+            seed
           }
         }
       }

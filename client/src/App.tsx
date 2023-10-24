@@ -2,8 +2,12 @@ import { useDojo } from './DojoContext';
 import { Direction, } from './dojo/createSystemCalls'
 import { useComponentValue } from "@latticexyz/react";
 import { Entity } from '@latticexyz/recs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setComponentsFromGraphQLEntities } from '@dojoengine/utils';
+import Canvas from './ui/Canvas';
+import { Container, Sprite, Stage, Text } from '@pixi/react';
+import skull from "./skull.png";
+
 
 function App() {
   const {
@@ -22,8 +26,12 @@ function App() {
   const entityId = account.address.toString();
 
   // get current component values
-  const position = useComponentValue(components.Position, entityId as Entity);
+  const position = useComponentValue(components.Boat, entityId as Entity);
   const moves = useComponentValue(components.Moves, entityId as Entity);
+
+
+  const [isMusicPlaying, setMusicPlaying] = useState(false);
+
 
   // use graphql to current state data
   useEffect(() => {
@@ -43,6 +51,23 @@ function App() {
     fetchData();
   }, [entityId, contractComponents]);
 
+  // return(
+  //   <>
+  //   <h1>Welcome to my app</h1>
+  //   <button onClick={create}>{isDeploying ? "deploying burner" : "create burner"}</button>
+  //   <img src={skull} />
+  //   <Stage 
+  //     width={300} 
+  //     height={300} 
+  //     options={{ 
+  //     backgroundColor: 0x012b30, 
+  //     antialias: true 
+  //     }}>
+  //     <Sprite image={skull} />
+  //   </Stage>
+  //   </>
+  // );
+
 
   return (
     <>
@@ -57,6 +82,9 @@ function App() {
       </div>
       <div className="card">
         <button onClick={() => spawn(account)}>Spawn</button>
+        <div className="flex-grow mx-auto mt-2">
+          <Canvas setMusicPlaying={setMusicPlaying} />
+        </div>
         <div>Moves Left: {moves ? `${moves['remaining']}` : 'Need to Spawn'}</div>
         <div>Position: {position ? `${position.vec['x']}, ${position.vec['y']}` : 'Need to Spawn'}</div>
       </div>

@@ -20,9 +20,49 @@ export type Scalars = {
   Cursor: { input: any; output: any; }
   DateTime: { input: any; output: any; }
   Enum: { input: any; output: any; }
+  bool: { input: any; output: any; }
   felt252: { input: any; output: any; }
   u8: { input: any; output: any; }
   u32: { input: any; output: any; }
+};
+
+export type Boat = {
+  __typename?: 'Boat';
+  entity?: Maybe<Entity>;
+  player?: Maybe<Scalars['ContractAddress']['output']>;
+  vec?: Maybe<Vec2>;
+};
+
+export type BoatConnection = {
+  __typename?: 'BoatConnection';
+  edges?: Maybe<Array<Maybe<BoatEdge>>>;
+  total_count: Scalars['Int']['output'];
+};
+
+export type BoatEdge = {
+  __typename?: 'BoatEdge';
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  node?: Maybe<Boat>;
+};
+
+export type BoatOrder = {
+  direction: OrderDirection;
+  field: BoatOrderField;
+};
+
+export enum BoatOrderField {
+  Player = 'PLAYER',
+  Vec = 'VEC'
+}
+
+export type BoatWhereInput = {
+  player?: InputMaybe<Scalars['ContractAddress']['input']>;
+  playerEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
+  playerGT?: InputMaybe<Scalars['ContractAddress']['input']>;
+  playerGTE?: InputMaybe<Scalars['ContractAddress']['input']>;
+  playerLT?: InputMaybe<Scalars['ContractAddress']['input']>;
+  playerLTE?: InputMaybe<Scalars['ContractAddress']['input']>;
+  playerNEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
 };
 
 export type Entity = {
@@ -70,6 +110,70 @@ export type EventEdge = {
   node?: Maybe<Event>;
 };
 
+export type Game = {
+  __typename?: 'Game';
+  entity?: Maybe<Entity>;
+  game_id?: Maybe<Scalars['u32']['output']>;
+  over?: Maybe<Scalars['bool']['output']>;
+  player?: Maybe<Scalars['felt252']['output']>;
+  seed?: Maybe<Scalars['felt252']['output']>;
+};
+
+export type GameConnection = {
+  __typename?: 'GameConnection';
+  edges?: Maybe<Array<Maybe<GameEdge>>>;
+  total_count: Scalars['Int']['output'];
+};
+
+export type GameEdge = {
+  __typename?: 'GameEdge';
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  node?: Maybe<Game>;
+};
+
+export type GameOrder = {
+  direction: OrderDirection;
+  field: GameOrderField;
+};
+
+export enum GameOrderField {
+  GameId = 'GAME_ID',
+  Over = 'OVER',
+  Player = 'PLAYER',
+  Seed = 'SEED'
+}
+
+export type GameWhereInput = {
+  game_id?: InputMaybe<Scalars['u32']['input']>;
+  game_idEQ?: InputMaybe<Scalars['u32']['input']>;
+  game_idGT?: InputMaybe<Scalars['u32']['input']>;
+  game_idGTE?: InputMaybe<Scalars['u32']['input']>;
+  game_idLT?: InputMaybe<Scalars['u32']['input']>;
+  game_idLTE?: InputMaybe<Scalars['u32']['input']>;
+  game_idNEQ?: InputMaybe<Scalars['u32']['input']>;
+  over?: InputMaybe<Scalars['bool']['input']>;
+  overEQ?: InputMaybe<Scalars['bool']['input']>;
+  overGT?: InputMaybe<Scalars['bool']['input']>;
+  overGTE?: InputMaybe<Scalars['bool']['input']>;
+  overLT?: InputMaybe<Scalars['bool']['input']>;
+  overLTE?: InputMaybe<Scalars['bool']['input']>;
+  overNEQ?: InputMaybe<Scalars['bool']['input']>;
+  player?: InputMaybe<Scalars['felt252']['input']>;
+  playerEQ?: InputMaybe<Scalars['felt252']['input']>;
+  playerGT?: InputMaybe<Scalars['felt252']['input']>;
+  playerGTE?: InputMaybe<Scalars['felt252']['input']>;
+  playerLT?: InputMaybe<Scalars['felt252']['input']>;
+  playerLTE?: InputMaybe<Scalars['felt252']['input']>;
+  playerNEQ?: InputMaybe<Scalars['felt252']['input']>;
+  seed?: InputMaybe<Scalars['felt252']['input']>;
+  seedEQ?: InputMaybe<Scalars['felt252']['input']>;
+  seedGT?: InputMaybe<Scalars['felt252']['input']>;
+  seedGTE?: InputMaybe<Scalars['felt252']['input']>;
+  seedLT?: InputMaybe<Scalars['felt252']['input']>;
+  seedLTE?: InputMaybe<Scalars['felt252']['input']>;
+  seedNEQ?: InputMaybe<Scalars['felt252']['input']>;
+};
+
 export type Metadata = {
   __typename?: 'Metadata';
   id?: Maybe<Scalars['ID']['output']>;
@@ -109,7 +213,7 @@ export type ModelEdge = {
   node?: Maybe<Model>;
 };
 
-export type ModelUnion = Moves | Position;
+export type ModelUnion = Boat | Game | Moves;
 
 export type Moves = {
   __typename?: 'Moves';
@@ -165,60 +269,34 @@ export enum OrderDirection {
   Desc = 'DESC'
 }
 
-export type Position = {
-  __typename?: 'Position';
-  entity?: Maybe<Entity>;
-  player?: Maybe<Scalars['ContractAddress']['output']>;
-  vec?: Maybe<Vec2>;
-};
-
-export type PositionConnection = {
-  __typename?: 'PositionConnection';
-  edges?: Maybe<Array<Maybe<PositionEdge>>>;
-  total_count: Scalars['Int']['output'];
-};
-
-export type PositionEdge = {
-  __typename?: 'PositionEdge';
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  node?: Maybe<Position>;
-};
-
-export type PositionOrder = {
-  direction: OrderDirection;
-  field: PositionOrderField;
-};
-
-export enum PositionOrderField {
-  Player = 'PLAYER',
-  Vec = 'VEC'
-}
-
-export type PositionWhereInput = {
-  player?: InputMaybe<Scalars['ContractAddress']['input']>;
-  playerEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
-  playerGT?: InputMaybe<Scalars['ContractAddress']['input']>;
-  playerGTE?: InputMaybe<Scalars['ContractAddress']['input']>;
-  playerLT?: InputMaybe<Scalars['ContractAddress']['input']>;
-  playerLTE?: InputMaybe<Scalars['ContractAddress']['input']>;
-  playerNEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
-};
-
 export type Query = {
   __typename?: 'Query';
+  boatModels?: Maybe<BoatConnection>;
   entities?: Maybe<EntityConnection>;
   entity: Entity;
   events?: Maybe<EventConnection>;
+  gameModels?: Maybe<GameConnection>;
   metadata: Metadata;
   metadatas?: Maybe<MetadataConnection>;
   model: Model;
   models?: Maybe<ModelConnection>;
   movesModels?: Maybe<MovesConnection>;
-  positionModels?: Maybe<PositionConnection>;
   system: System;
   systemCall: SystemCall;
   systemCalls?: Maybe<SystemCallConnection>;
   systems?: Maybe<SystemConnection>;
+};
+
+
+export type QueryBoatModelsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<BoatOrder>;
+  where?: InputMaybe<BoatWhereInput>;
 };
 
 
@@ -245,6 +323,18 @@ export type QueryEventsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGameModelsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<GameOrder>;
+  where?: InputMaybe<GameWhereInput>;
 };
 
 
@@ -287,18 +377,6 @@ export type QueryMovesModelsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<MovesOrder>;
   where?: InputMaybe<MovesWhereInput>;
-};
-
-
-export type QueryPositionModelsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<PositionOrder>;
-  where?: InputMaybe<PositionWhereInput>;
 };
 
 
@@ -400,7 +478,7 @@ export type Vec2 = {
 export type GetEntitiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Position', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | null> | null } | null } | null> | null } | null };
+export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | { __typename: 'Game' } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | null> | null } | null } | null> | null } | null };
 
 
 export const GetEntitiesDocument = gql`
@@ -415,7 +493,7 @@ export const GetEntitiesDocument = gql`
             remaining
             last_direction
           }
-          ... on Position {
+          ... on Boat {
             vec {
               x
               y
