@@ -46,7 +46,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     } = useDojo();
   
     const contractState = useComponentStates();
-    const { game, map: mapState, boat, hitter, hitPosition } = contractState;
+    const { game, map: mapState, boat } = contractState;
   
     // const [score, setScore] = useState<number>(0);
     // const [level, setLevel] = useState<number>(0);
@@ -86,9 +86,10 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
       reset_holes();
   
       console.log("pseudo", pseudo);
-      const pseudoFelt = shortString.encodeShortString(pseudo);
+      const pseudoFelt = pseudo !== undefined ? shortString.encodeShortString(pseudo): "anonymous";
+      console.log("pseudoFelt", pseudoFelt);
       // create(account, ip, 1000, pseudoFelt); //, set_hit_mob, set_turn);
-      create(account, ip, 1000, pseudoFelt, add_hole, set_size); //, set_hit_mob, set_turn);
+      create(account, ip, 1000, "ZEEZ", add_hole, set_size); //, set_hit_mob, set_turn);
     };
   
     // useEffect(() => {
@@ -108,7 +109,6 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
   
     useEffect(() => {
       console.log("[CANVAS] generateGrid", map);
-      // set_size(map.length);
       setGrid(generateGrid(map));
     }, [map]);
   
@@ -154,23 +154,24 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
             width={WIDTH}
             height={HEIGHT}
             options={{ backgroundColor: 'goldenrod' }} //'#242424' }}
-            // onPointerMove={(e) => {
-            //     const gridPos = to_grid_coordinate({
-            //     x: e.nativeEvent.offsetX - WIDTH / 2,
-            //     y: e.nativeEvent.offsetY - H_OFFSET + 18, // 18 otherwise mouse not centered on the tile
-            //     });
-            //     const tileX = Math.round(gridPos.x);
-            //     const tileY = Math.round(gridPos.y);
+            onPointerMove={(e) => {
+                const gridPos = to_grid_coordinate({
+                x: e.nativeEvent.offsetX - WIDTH / 2,
+                y: e.nativeEvent.offsetY - H_OFFSET + 18, // 18 otherwise mouse not centered on the tile
+                });
+                
+                const tileX = Math.round(gridPos.x);
+                const tileY = Math.round(gridPos.y);
     
-            //     const tileCoords = { x: tileX, y: tileY };
-            //     if (hoveredTile === undefined || !areCoordsEqual(hoveredTile, tileCoords)) {
-            //     setHoveredTile(tileCoords);
-            //     setAbsolutePosition({
-            //         x: e.nativeEvent.offsetX,
-            //         y: e.nativeEvent.offsetY,
-            //     });
-            //     }
-            // }}
+                const tileCoords = { x: tileX, y: tileY };
+                if (hoveredTile === undefined || !areCoordsEqual(hoveredTile, tileCoords)) {
+                  setHoveredTile(tileCoords);
+                // setAbsolutePosition({
+                //     x: e.nativeEvent.offsetX,
+                //     y: e.nativeEvent.offsetY,
+                // });
+                }
+            }}
             >
                 <Container sortableChildren={true}>
                 <Text text="Hello World" anchor={{ x: 0, y: 0 }} filters={[blurFilter]} />

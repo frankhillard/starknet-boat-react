@@ -15,11 +15,11 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ hoveredTile }) => {
-  console.log("Draw MAP");
+  
   const [grid, setGrid] = useState<GridElement[][]>([]);
 
   const { ip, hit_mob, map } = useElementStore((state) => state);
-
+  console.log("Draw MAP", map);
   useEffect(() => {
     console.log("[MAP] generateGrid");
     setGrid(generateGrid(map));
@@ -88,11 +88,10 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
 
       const screenPos = to_screen_coordinate(tile);
       const adjustment =
-        hoveredTile && hoveredTile.x === tile.x && hoveredTile.y === tile.y && tile.type === 'ground' ? 5 : 0;
-      console.log("adjustment", adjustment);
+        hoveredTile && hoveredTile.x === tile.x && hoveredTile.y === tile.y ? 5 : 0;
+      
       // Use water tile for border and your original tile for inside
       let tileImage = groundTile;
-      let adj = 0;
       if (tile.type === 'water') {
         tileImage = waterTile;
       }
@@ -104,7 +103,7 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
           anchor={0.5}
           scale={2}
           x={screenPos.x + WIDTH / 2}
-          y={screenPos.y + H_OFFSET - adjustment - adj}
+          y={screenPos.y + H_OFFSET - adjustment}
         />
       );
     });

@@ -8,6 +8,8 @@ import { ClientComponents } from "./createClientComponents";
 import { updatePositionWithDirection } from "../utils";
 import { getEvents } from "@dojoengine/utils";
 import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
+import { Vec2 } from "../generated/graphql";
+import { TileType } from '../hooks/useComponentStates';
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 let Number_of_holes = 0;
@@ -53,7 +55,7 @@ export function createSystemCalls(
             if (events.length !== 0) {
                 const transformed_events = await setComponentsFromEvents(contractComponents, events);
                 // setComponentsFromEvents(contractComponents, events);
-                await executeEvents(transformed_events, add_hole, set_size);
+                await executeEvents(transformed_events, add_hole, set_size, undefined);
             }
         } catch (e) {
             console.log(e)
@@ -99,9 +101,13 @@ export function createSystemCalls(
         }
     };
 
-    const move = async (signer: Account, direction: Direction) => {
+    const move = async (
+      signer: Account, 
+      direction: Direction, 
+      set_position: (x: number, y: number) => void,
+    ) => {
         const entityId = signer.address.toString() as EntityIndex;
-
+        console.log("MOOOOVE");
         const positionId = uuid();
         Boat.addOverride(positionId, {
             entity: entityId,
@@ -116,13 +122,15 @@ export function createSystemCalls(
 
         try {
             const tx = await execute(signer, "actions", "move", [direction]);
-            setComponentsFromEvents(contractComponents,
-                getEvents(
-                    await signer.waitForTransaction(tx.transaction_hash,
-                        { retryInterval: 100 }
-                    )
+            const events = getEvents(
+              await signer.waitForTransaction(tx.transaction_hash,
+                  { retryInterval: 100 }
                 )
             );
+            console.log('moveevents', events);
+            const transformed_events = await setComponentsFromEvents(contractComponents, events);
+            // setComponentsFromEvents(contractComponents, events);
+            await executeEvents(transformed_events, undefined, undefined, set_position);
 
         } catch (e) {
             console.log(e)
@@ -168,10 +176,20 @@ function hexToAscii(hex: string) {
     return str;
 }
 
+function toHex(str: string) {
+  let result = '';
+  for (let i=0; i<str.length; i++) {
+    result += str.charCodeAt(i).toString(16);
+  }
+  return result;
+}
+
+
 export async function executeEvents(
     events: TransformedEvent[],
     add_hole: (x: number, y: number) => void,
     set_size: (size: number) => void,
+    set_position: (x: number, y: number) => void,
     // reset_holes: () => void,
     // set_hit_mob: (mob: MobType) => void,
     // set_turn: (mob: TileType) => void
@@ -182,23 +200,30 @@ export async function executeEvents(
       setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
+    const boatEvents = events.filter((e): e is BoatEvent & ComponentData => e.type === 'Boat');
+    console.log('boatEvents', boatEvents);
+    for (const e of boatEvents) {
+      set_position(e.vec.x, e.vec.y);
+      setComponent(e.component, e.entityIndex, e.componentValues);
+    }
+
     const mapEvents = events.filter((e): e is MapEvent & ComponentData => e.type === 'Map');
     // console.log('mapEvents', mapEvents);
     for (const e of mapEvents) {
         console.log("SET SIZE", e.size);
-      set_size(e.size);
+        set_size(e.size);
   
     //   Map_size = e.size;
     //   if (e.spawn === 0) {
     //     reset_holes();
     //   }
-      setComponent(e.component, e.entityIndex, e.componentValues);
+        setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
     const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
     console.log('tileEvents', tileEvents);
     for (const e of tileEvents) {
-      if (e._type === TileType.Hole) {
+      if (e._type === TileType.Ground) {
         add_hole(e.x, e.y);
         Number_of_holes++;
       }
@@ -215,6 +240,9 @@ export async function executeEvents(
     await sleep(1000);
   }
   
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   type MapEvent = ComponentData & {
     type: 'Map';
@@ -247,7 +275,7 @@ export async function executeEvents(
       spawn: Number(spawn),
       score: Number(score),
       over: Boolean(over),
-      name: shortString.decodeShortString(name),
+      name: "Default", //shortString.decodeShortString(name),
     };
   }
 
@@ -277,27 +305,27 @@ export async function executeEvents(
     };
   }
 
-  type MovedEvent = ComponentData & {
-    type: 'Moved';
-    player: number;
-    direction: Direction;
+  type BoatEvent = ComponentData & {
+    type: 'Boat';
+    player: string;
+    vec: Vec2;
   };
 
-  handleMovedEvent
-  function handleMovedEvent(
+  handleBoatEvent
+  function handleBoatEvent(
     keys: bigint[],
     values: string[]
-  ): Omit<MovedEvent, 'component' | 'componentValues' | 'entityIndex'> {
-    console.log("handleMovedEvent", values);
-    const [player] = keys.map((k) => Number(k));
-    const [direction] = values.map((v) => Number(v));
+  ): Omit<BoatEvent, 'component' | 'componentValues' | 'entityIndex'> {
+    console.log("handleBoatEvent", values);
+    const [player] = keys.map((k) => k.toString(16));
+    const [x, y] = values.map((v) => Number(v));
     console.log(
-      `[Moved: KEYS: (player: ${player}) - VALUES: (direction: ${direction}, )]`
+      `[Boat: KEYS: (player: ${player}) - VALUES: (x: ${x}, y: ${y} )]`
     );
     return {
-      type: 'Moved',
+      type: 'Boat',
       player,
-      direction,
+      vec: {x: x, y: y},
     };
   }
 
@@ -344,11 +372,10 @@ type ComponentData = {
     entityIndex: EntityIndex;
   };
   
-  type TransformedEvent = GameEvent | MapEvent | ComponentData;
+  type TransformedEvent = GameEvent | MapEvent | TileEvent | BoatEvent | ComponentData;
   
   export async function setComponentsFromEvents(components: Components, events: Event[]): Promise<TransformedEvent[]> {
     const transformedEvents = [];
-  
     for (const event of events) {
       const componentName = hexToAscii(event.data[0]);
       const keysNumber = parseInt(event.data[1]);
@@ -365,7 +392,7 @@ type ComponentData = {
         return acc;
       }, {});
       const entity = getEntityIdFromKeys(keys);
-  
+
       const baseEventData = {
         component,
         componentValues,
@@ -379,12 +406,12 @@ type ComponentData = {
         case 'Game':
             transformedEvents.push({ ...handleGameEvent(keys, values), ...baseEventData });
             break;
-        case 'Moved':
-            transformedEvents.push({ ...handleMovedEvent(keys, values), ...baseEventData });
+        case 'Boat':
+            transformedEvents.push({ ...handleBoatEvent(keys, values), ...baseEventData });
             break;
         case 'Tile':
-          transformedEvents.push({ ...handleTileEvent(keys, values), ...baseEventData });
-          break;
+            transformedEvents.push({ ...handleTileEvent(keys, values), ...baseEventData });
+            break;
         default:
 
       }

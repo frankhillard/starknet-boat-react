@@ -9,7 +9,7 @@ import { Coordinate } from '../type/GridElement';
 import { to_center, to_grid_coordinate, to_screen_coordinate } from '../utils/grid';
 // import TileMarker from './TileMarker';
 // import { Direction, getFramesFromType, Animation } from '../utils/animation';
-import skull from "../skull.png";
+import boatpic from "../boat.png";
 
 // export type MobType = 'bowman' | 'barbarian' | 'knight' | 'wizard';
 export type BoatType = 'classic';
@@ -227,7 +227,7 @@ const Boat: React.FC<BoatProps> = ({
     <>
     <Sprite
           key={`${absolutePosition.x}-${absolutePosition.y}`}
-          image={skull}
+          image={boatpic}
           anchor={0.5}
           scale={0.5}
           x={absolutePosition.x}

@@ -61,13 +61,13 @@ export const generateGrid = (map: Map): GridElement[][] => {
       const layer: Layer = 'base'; // vous pouvez aussi déterminer cela dynamiquement
       // Générer aléatoirement le type (eau ou sol)
 
-      const type = 'ground' as ElementType;
+      const type = 'water' as ElementType;
 
       return { ...coordinate, layer, type };
     })
   );
 
-  map.holes.forEach((hole) => (generated[hole.x][hole.y].type = 'water'));
+  map.holes.forEach((hole) => (generated[hole.x][hole.y].type = 'ground'));
 
   return generated;
 };

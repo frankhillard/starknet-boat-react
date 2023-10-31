@@ -7,7 +7,7 @@ import { setComponentsFromGraphQLEntities } from '@dojoengine/utils';
 import Canvas from './ui/Canvas';
 import { Container, Sprite, Stage, Text } from '@pixi/react';
 import skull from "./skull.png";
-
+import { useElementStore } from './utils/store';
 
 function App() {
   const {
@@ -31,6 +31,9 @@ function App() {
 
 
   const [isMusicPlaying, setMusicPlaying] = useState(false);
+
+  const { ip, hit_mob, map: map_store, position: store_position, add_hole, reset_holes, set_size, set_position } = useElementStore((state) => state);
+  // console.log('ip', ip);
 
 
   // use graphql to current state data
@@ -89,10 +92,10 @@ function App() {
         <div>Position: {position && position.vec ? `${position?.vec['x']}, ${position?.vec['y']}` : 'Need to Spawn'}</div>
       </div>
       <div className="card">
-        <button onClick={() => move(account, Direction.Up)}>Move Up</button> <br />
-        <button onClick={() => move(account, Direction.Left)}>Move Left</button>
-        <button onClick={() => move(account, Direction.Right)}>Move Right</button> <br />
-        <button onClick={() => move(account, Direction.Down)}>Move Down</button>
+        <button onClick={() => move(account, Direction.Up, set_position)}>Move Up</button> <br />
+        <button onClick={() => move(account, Direction.Left, set_position)}>Move Left</button>
+        <button onClick={() => move(account, Direction.Right, set_position)}>Move Right</button> <br />
+        <button onClick={() => move(account, Direction.Down, set_position)}>Move Down</button>
       </div>
     </>
   );
