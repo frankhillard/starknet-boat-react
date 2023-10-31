@@ -7,9 +7,10 @@ import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
 import { updatePositionWithDirection } from "../utils";
 import { getEvents } from "@dojoengine/utils";
-// import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
+import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
+let Number_of_holes = 0;
 
 export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
@@ -21,6 +22,7 @@ export function createSystemCalls(
         ip: number,
         seed: number,
         pseudo: string,
+        add_hole: (x: number, y: number) => void,
         set_size: (size: number) => void,
     ) => {
         console.log("CREAAATE");
@@ -50,8 +52,8 @@ export function createSystemCalls(
             console.log('events', events);
             if (events.length !== 0) {
                 const transformed_events = await setComponentsFromEvents(contractComponents, events);
-                //setComponentsFromEvents(contractComponents, events);
-                await executeEvents(transformed_events, set_size);
+                // setComponentsFromEvents(contractComponents, events);
+                await executeEvents(transformed_events, add_hole, set_size);
             }
         } catch (e) {
             console.log(e)
@@ -168,7 +170,7 @@ function hexToAscii(hex: string) {
 
 export async function executeEvents(
     events: TransformedEvent[],
-    // add_hole: (x: number, y: number) => void,
+    add_hole: (x: number, y: number) => void,
     set_size: (size: number) => void,
     // reset_holes: () => void,
     // set_hit_mob: (mob: MobType) => void,
@@ -193,15 +195,22 @@ export async function executeEvents(
       setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
-    // const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
-    // // console.log('tileEvents', tileEvents);
-    // for (const e of tileEvents) {
-    // //   if (e._type === TileType.Hole) {
-    // //     add_hole(e.x, e.y);
-    // //     Number_of_holes++;
-    // //   }
+    const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
+    console.log('tileEvents', tileEvents);
+    for (const e of tileEvents) {
+      if (e._type === TileType.Hole) {
+        add_hole(e.x, e.y);
+        Number_of_holes++;
+      }
+      setComponent(e.component, e.entityIndex, e.componentValues);
+    }
+
+    // const otherEvents = events;
+    // // console.log('gameEvents', gameEvents);
+    // for (const e of otherEvents) {
     //   setComponent(e.component, e.entityIndex, e.componentValues);
     // }
+
   
     await sleep(1000);
   }
@@ -268,6 +277,67 @@ export async function executeEvents(
     };
   }
 
+  type MovedEvent = ComponentData & {
+    type: 'Moved';
+    player: number;
+    direction: Direction;
+  };
+
+  handleMovedEvent
+  function handleMovedEvent(
+    keys: bigint[],
+    values: string[]
+  ): Omit<MovedEvent, 'component' | 'componentValues' | 'entityIndex'> {
+    console.log("handleMovedEvent", values);
+    const [player] = keys.map((k) => Number(k));
+    const [direction] = values.map((v) => Number(v));
+    console.log(
+      `[Moved: KEYS: (player: ${player}) - VALUES: (direction: ${direction}, )]`
+    );
+    return {
+      type: 'Moved',
+      player,
+      direction,
+    };
+  }
+
+
+
+  type TileEvent = ComponentData & {
+    type: 'Tile';
+    game_id: number;
+    index: number;
+    _type: number;
+    x: number;
+    y: number;
+  };
+
+  handleTileEvent
+  function handleTileEvent(
+    keys: bigint[],
+    values: string[]
+  ): Omit<TileEvent, 'component' | 'componentValues' | 'entityIndex'> {
+    console.log("handleTileEvent", values);
+    const [game_id,  index] = keys.map((k) => Number(k));
+    const [_type, x, y] = values.map((v) => Number(v));
+    console.log(
+      `[Tile: KEYS: (game_id: ${game_id},index: ${index}) - VALUES: (_type: ${_type}, x: ${x}, y: ${y})]`
+    );
+    return {
+      type: 'Tile',
+      game_id,
+      index,
+      _type,
+      x,
+      y
+    };
+  }
+
+
+
+
+
+
 type ComponentData = {
     component: Component;
     componentValues: Schema;
@@ -309,6 +379,12 @@ type ComponentData = {
         case 'Game':
             transformedEvents.push({ ...handleGameEvent(keys, values), ...baseEventData });
             break;
+        case 'Moved':
+            transformedEvents.push({ ...handleMovedEvent(keys, values), ...baseEventData });
+            break;
+        case 'Tile':
+          transformedEvents.push({ ...handleTileEvent(keys, values), ...baseEventData });
+          break;
         default:
 
       }

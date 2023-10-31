@@ -29,56 +29,55 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
   if (!map.size) return null;
 
   
-  const newGrid = grid;
-  // const newGrid = [
-  //   [
-  //     { x: -2, y: 0, layer: 'base', type: 'water' },
-  //     { x: -2, y: 1, layer: 'base', type: 'water' },
-  //     { x: -2, y: 2, layer: 'base', type: 'water' },
-  //     { x: -2, y: 3, layer: 'base', type: 'water' },
-  //     { x: -2, y: 4, layer: 'base', type: 'water' },
-  //     { x: -2, y: 5, layer: 'base', type: 'water' },
-  //     { x: -2, y: 6, layer: 'base', type: 'water' },
-  //     { x: -2, y: 7, layer: 'base', type: 'water' },
-  //   ],
-  //   [
-  //     { x: -1, y: 0, layer: 'base', type: 'water' },
-  //     { x: -1, y: 1, layer: 'base', type: 'water' },
-  //     { x: -1, y: 2, layer: 'base', type: 'water' },
-  //     { x: -1, y: 3, layer: 'base', type: 'water' },
-  //     { x: -1, y: 4, layer: 'base', type: 'water' },
-  //     { x: -1, y: 5, layer: 'base', type: 'water' },
-  //     { x: -1, y: 6, layer: 'base', type: 'water' },
-  //     { x: -1, y: 7, layer: 'base', type: 'water' },
-  //   ],
-  //   ...grid,
-  //   [
-  //     { x: 8, y: 0, layer: 'base', type: 'water' },
-  //     { x: 8, y: 1, layer: 'base', type: 'water' },
-  //     { x: 8, y: 2, layer: 'base', type: 'water' },
-  //     { x: 8, y: 3, layer: 'base', type: 'water' },
-  //     { x: 8, y: 4, layer: 'base', type: 'water' },
-  //     { x: 8, y: 5, layer: 'base', type: 'water' },
-  //     { x: 8, y: 6, layer: 'base', type: 'water' },
-  //     { x: 8, y: 7, layer: 'base', type: 'water' },
-  //   ],
-  //   [
-  //     { x: 9, y: 0, layer: 'base', type: 'water' },
-  //     { x: 9, y: 1, layer: 'base', type: 'water' },
-  //     { x: 9, y: 2, layer: 'base', type: 'water' },
-  //     { x: 9, y: 3, layer: 'base', type: 'water' },
-  //     { x: 9, y: 4, layer: 'base', type: 'water' },
-  //     { x: 9, y: 5, layer: 'base', type: 'water' },
-  //     { x: 9, y: 6, layer: 'base', type: 'water' },
-  //     { x: 9, y: 7, layer: 'base', type: 'water' },
-  //   ],
-  // ];
+  // const newGrid = grid;
+  const newGrid = [
+    [
+      { x: -2, y: 0, layer: 'base', type: 'water' },
+      { x: -2, y: 1, layer: 'base', type: 'water' },
+      { x: -2, y: 2, layer: 'base', type: 'water' },
+      { x: -2, y: 3, layer: 'base', type: 'water' },
+      { x: -2, y: 4, layer: 'base', type: 'water' },
+      { x: -2, y: 5, layer: 'base', type: 'water' },
+      { x: -2, y: 6, layer: 'base', type: 'water' },
+      { x: -2, y: 7, layer: 'base', type: 'water' },
+    ],
+    [
+      { x: -1, y: 0, layer: 'base', type: 'water' },
+      { x: -1, y: 1, layer: 'base', type: 'water' },
+      { x: -1, y: 2, layer: 'base', type: 'water' },
+      { x: -1, y: 3, layer: 'base', type: 'water' },
+      { x: -1, y: 4, layer: 'base', type: 'water' },
+      { x: -1, y: 5, layer: 'base', type: 'water' },
+      { x: -1, y: 6, layer: 'base', type: 'water' },
+      { x: -1, y: 7, layer: 'base', type: 'water' },
+    ],
+    ...grid,
+    [
+      { x: 8, y: 0, layer: 'base', type: 'water' },
+      { x: 8, y: 1, layer: 'base', type: 'water' },
+      { x: 8, y: 2, layer: 'base', type: 'water' },
+      { x: 8, y: 3, layer: 'base', type: 'water' },
+      { x: 8, y: 4, layer: 'base', type: 'water' },
+      { x: 8, y: 5, layer: 'base', type: 'water' },
+      { x: 8, y: 6, layer: 'base', type: 'water' },
+      { x: 8, y: 7, layer: 'base', type: 'water' },
+    ],
+    [
+      { x: 9, y: 0, layer: 'base', type: 'water' },
+      { x: 9, y: 1, layer: 'base', type: 'water' },
+      { x: 9, y: 2, layer: 'base', type: 'water' },
+      { x: 9, y: 3, layer: 'base', type: 'water' },
+      { x: 9, y: 4, layer: 'base', type: 'water' },
+      { x: 9, y: 5, layer: 'base', type: 'water' },
+      { x: 9, y: 6, layer: 'base', type: 'water' },
+      { x: 9, y: 7, layer: 'base', type: 'water' },
+    ],
+  ];
 
   console.log("render", newGrid);
 
   return newGrid.map((row: any, i) => {
     const newRow = [
-      { x: i - 2, y: -3, layer: 'base', type: 'water' },
       { x: i - 2, y: -2, layer: 'base', type: 'water' },
       { x: i - 2, y: -1, layer: 'base', type: 'water' },
       ...row,
@@ -86,10 +85,11 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
       { x: i - 2, y: 9, layer: 'base', type: 'water' },
     ];
     return newRow.map((tile: any) => {
+
       const screenPos = to_screen_coordinate(tile);
       const adjustment =
-        hoveredTile && hoveredTile.x === tile.x && hoveredTile.y === tile.y && tile.type === 'ground' ? 50 : 0;
-
+        hoveredTile && hoveredTile.x === tile.x && hoveredTile.y === tile.y && tile.type === 'ground' ? 5 : 0;
+      console.log("adjustment", adjustment);
       // Use water tile for border and your original tile for inside
       let tileImage = groundTile;
       let adj = 0;

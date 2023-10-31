@@ -48,8 +48,8 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     const contractState = useComponentStates();
     const { game, map: mapState, boat, hitter, hitPosition } = contractState;
   
-    const [score, setScore] = useState<number>(0);
-    const [level, setLevel] = useState<number>(0);
+    // const [score, setScore] = useState<number>(0);
+    // const [level, setLevel] = useState<number>(0);
     const [grid, setGrid] = useState<GridElement[][]>([]);
     const [hoveredTile, setHoveredTile] = useState<Coordinate | undefined>(undefined);
     // const [hoveredMob, setHoveredMob] = useState<MobType | undefined>(undefined);
@@ -76,7 +76,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     }, [ip, loading]);
   
     const generateNewGame = async () => {
-      setScore(0);
+      // setScore(0);
       const storedIsMusicPlaying = localStorage.getItem('isMusicPlaying');
       if (storedIsMusicPlaying === null) {
         setMusicPlaying(true);
@@ -88,7 +88,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
       console.log("pseudo", pseudo);
       const pseudoFelt = shortString.encodeShortString(pseudo);
       // create(account, ip, 1000, pseudoFelt); //, set_hit_mob, set_turn);
-      create(account, ip, 1000, pseudoFelt, set_size); //, set_hit_mob, set_turn);
+      create(account, ip, 1000, pseudoFelt, add_hole, set_size); //, set_hit_mob, set_turn);
     };
   
     // useEffect(() => {
@@ -128,6 +128,12 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
       }
     }, [mapState.spawn]);
   
+
+    useEffect(() => {
+      if (boat !== undefined) {
+        console.log("[CANVAS] boat (use efect)", boat);
+      }
+    }, [boat]);
     // const { knightNeighbors, barbarianNeighbors, bowmanNeighbors, wizardNeighbors } = useGrid(grid);
   
     // const passTurn = () => {
@@ -140,7 +146,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // PIXI.Texture.from(skull).baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     const blurFilter = useMemo(() => new BlurFilter(4), []);
     // console.log("[Canvas] BOAT", boat);
-    // console.log("[Canvas] BOAT", boat);
+    console.log("[Canvas] BOAT", boat);
     return (
         <div style={{ position: 'relative' }}>
           {map.size === 0 && <NewGame onClick={generateNewGame} onPseudoChange={setPseudo} />}

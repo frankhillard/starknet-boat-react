@@ -53,6 +53,7 @@ const Boat: React.FC<BoatProps> = ({
   health,
   position,
 }) => {
+  console.log("Draw Boat", position, targetPosition);
 //   const [animation, setAnimation] = useState<Animation>(Animation.Idle);
 //   const [counterAnim, setCounterAnim] = useState(0);
 
@@ -146,17 +147,20 @@ const Boat: React.FC<BoatProps> = ({
     // };
     // load();
     // init position
+    console.log("[BOAT] init position", position);
     setAbsolutePosition(to_center(position));
     // console.log("init position abs", absolutePosition);
   }, []);
 
   useEffect(() => {
+    console.log("[BOAT] update position", position);
     setAbsolutePosition(to_center(position));
   }, [position]);
 
   // If we receive a new targetPosition from props, we transform it into absolute pixel pos and work on it for the move
   useEffect(() => {
     setAbsolutetargetPosition(to_center(targetPosition));
+    console.log("[BOAT] update target position", targetPosition);
   }, [targetPosition]);
 
   // Here we work only in absolute positions
@@ -218,7 +222,7 @@ const Boat: React.FC<BoatProps> = ({
 //   if (frames.length === 0) {
 //     return null;
 //   }
-  // console.log("absolutePosition", absolutePosition);
+  console.log("absolutePosition", absolutePosition);
   return (
     <>
     <Sprite
