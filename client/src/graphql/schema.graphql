@@ -20,6 +20,19 @@ query getEntities {
             over
             seed
           }
+          ... on Map {
+            game_id
+            length
+            width
+          }
+          ... on Tile {
+            game_id
+            index
+            _type
+            x
+            y
+          }
+
         }
       }
     }

@@ -11,5 +11,6 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         Boat: overridableComponent(contractComponents.Boat),
         Moves: overridableComponent(contractComponents.Moves),
         Tile: overridableComponent(contractComponents.Tile),
+        Map: overridableComponent(contractComponents.Map),
     };
 }

@@ -72,5 +72,22 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Map: (() => {
+      const name = 'Map';
+      return defineComponent(
+        world,
+        {
+          length: RecsType.Number,
+          width: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u32", "u32", "u32"],
+          },
+        }
+      );
+    })(),
+
   };
 }

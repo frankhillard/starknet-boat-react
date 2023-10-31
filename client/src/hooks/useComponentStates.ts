@@ -60,21 +60,31 @@ const getHitter = (
 export const useComponentStates = () => {
   const {
     setup: {
-      components: { Game, Boat, Tile },
+      components: { Game, Boat, Tile, Map },
     },
+    account: { create, list, select, account, isDeploying }
   } = useDojo();
 
-  const { ip, hit_mob } = useElementStore((state) => state);
-  console.log('ip', ip);
-//   const computed = getEntityIdFromKeys([
-//     BigInt(ip),
-//   ]);
-//   console.log('computed', computed);
+  const { ip, hit_mob, map: map_store, add_hole, reset_holes, set_size } = useElementStore((state) => state);
+  // console.log('ip', ip);
 
-  const entityId = ip as EntityIndex;
-//   const entityId = undefined as EntityIndex;
-  
+
+  let entityId = undefined as EntityIndex;
+  if (ip) {
+    // console.log('ip (hex)', ip?.toString(16) as EntityIndex);
+    const ip_hex = ip?.toString(16) as EntityIndex;
+    entityId = `0x${ip_hex}`;
+  } else {
+    entityId = `0x0`;
+  }
   const game = useComponentValue(Game, entityId);
+  console.log('[useComponentSates] game', game);
+
+//   console.log('ip (hex)', ip?.toString(16) as EntityIndex);
+//   const ip_hex = ip?.toString(16) as EntityIndex;
+//   const entityId = `0x${ip_hex}`;
+// //   const entityId = undefined as EntityIndex;  
+//   const game = useComponentValue(Game, entityId);
 
   const [hitPosition, setHitPosition] = useState<Coordinate | undefined>(undefined);
 
@@ -84,35 +94,56 @@ export const useComponentStates = () => {
 //   }, [hit_mob]);
 
   useEffect(() => {
-    console.log('game', game);
+    console.log('[useComponentSates] game (use effect)', game);
   }, [game]);
-  console.log('game', game);
-  const entityId2 = game?.game_id as EntityIndex;
+  
+  
+  const entityId2 = "0x0" as EntityIndex; //game?.game_id as EntityIndex;
+  console.log('[useComponentSates] entityId2', entityId2);
+
   const map = useComponentValue(Map, entityId2);
-  console.log('map', map);
+  useEffect(() => {
+    console.log('[useComponentSates] map (use effect)', map);
+    if (map !== undefined)
+      set_size(map.length);
+  }, [map]);
+  console.log('[useComponentSates] map', map);
 
   // ===================================================================================================================
   // BOAT
+  // const boat_entity = getEntityIdFromKeys([game?.game_id ? BigInt(game?.game_id) : BigInt(0), BigInt(0)]);
+  // console.log('boat_entity', boat_entity);
+  
+  // console.log('account', account);
   const boat = useComponentValue(
     Boat,
-    getEntityIdFromKeys([game?.game_id ? BigInt(game?.game_id) : BigInt(0), BigInt(TileType.Boat)])
+    account.address
+    // getEntityIdFromKeys([game?.game_id ? BigInt(game?.game_id) : BigInt(0), BigInt(TileType.Boat)])
   );
+  console.log('[useComponentSates] boat', boat);
+  // useEffect(() => {
+  //   console.log('boat (use effect)', boat);
+  // }, [boat]);
 
-  console.log('boat', boat);
-  let entityId3 = 0 as EntityIndex;
-  if (game && game.game_id !== undefined && map && map.level !== undefined && boat && boat.index !== undefined)
-    entityId3 = getEntityIdFromKeys([
-      game?.game_id ? BigInt(game?.game_id) : BigInt(0),
-      BigInt(map?.level),
-      BigInt(boat?.index),
-    ]);
-  const boat_position = useComponentValue(Tile, entityId3);
+  // console.log('boat', boat);
+  // let entityId3 = 0 as EntityIndex;
+  // if (game && game.game_id !== undefined && map && map.level !== undefined && boat && boat.index !== undefined)
+  //   entityId3 = getEntityIdFromKeys([
+  //     game?.game_id ? BigInt(game?.game_id) : BigInt(0),
+  //     BigInt(map?.level),
+  //     BigInt(boat?.index),
+  //   ]);
+  // const boat_position = useComponentValue(Tile, entityId3);
+
+  const boat_position = boat ? boat.vec : {x: 0, y: 0};
+
 
   return {
     game: { id: game?.game_id, over: game?.over, seed: game?.seed },
-    map: { level: map?.level, size: map?.size, spawn: map?.spawn, score: map?.score, over: map?.over, name: map?.name },
-    boat: createBoat('classic', 1000, { x: 0.75, y: 0.75 }, undefined), //boat_position, boat?.hitter),
-    hitter: getHitter(boat, undefined),
+    map: { level: 0, size: 4, spawn: 0, score: 0, over: 0, name: "toto" },
+    // map: { level: map?.level, size: map?.size, spawn: map?.spawn, score: map?.score, over: map?.over, name: map?.name },
+    boat: createBoat('classic', 1000, boat_position, undefined), //boat_position, boat?.hitter),
+    hitter: 42,
     hitPosition,
   };
 };

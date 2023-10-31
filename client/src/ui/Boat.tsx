@@ -133,25 +133,30 @@ const Boat: React.FC<BoatProps> = ({
 
   // current position absolute during movement
   // will be changing during the movement, towards the absoluteTargetPosition
-  const [absolutePosition, setAbsolutePosition] = useState<Coordinate>(to_center(to_screen_coordinate(targetPosition)));
+  const [absolutePosition, setAbsolutePosition] = useState<Coordinate>(to_center(position));
   const [absoluteTargetPosition, setAbsolutetargetPosition] = useState<Coordinate>(
-    to_center(to_screen_coordinate(targetPosition))
+    to_center(targetPosition)
   );
 
-// //  Only at init
-//   useEffect(() => {
-//     const load = async () => {
-//       const resource = await Assets.load(`assets/${type}/${type}.json`);
-//       setResource(resource);
-//     };
-//     load();
-//     // init position
-//     setAbsolutePosition(to_center(to_screen_coordinate(targetPosition)));
-//   }, []);
+//  Only at init
+  useEffect(() => {
+    // const load = async () => {
+    //   const resource = await Assets.load(`assets/${type}/${type}.json`);
+    //   setResource(resource);
+    // };
+    // load();
+    // init position
+    setAbsolutePosition(to_center(position));
+    // console.log("init position abs", absolutePosition);
+  }, []);
+
+  useEffect(() => {
+    setAbsolutePosition(to_center(position));
+  }, [position]);
 
   // If we receive a new targetPosition from props, we transform it into absolute pixel pos and work on it for the move
   useEffect(() => {
-    setAbsolutetargetPosition(to_center(to_screen_coordinate(targetPosition)));
+    setAbsolutetargetPosition(to_center(targetPosition));
   }, [targetPosition]);
 
   // Here we work only in absolute positions
@@ -213,14 +218,14 @@ const Boat: React.FC<BoatProps> = ({
 //   if (frames.length === 0) {
 //     return null;
 //   }
-  console.log("absolutePosition", absolutePosition);
+  // console.log("absolutePosition", absolutePosition);
   return (
     <>
     <Sprite
           key={`${absolutePosition.x}-${absolutePosition.y}`}
           image={skull}
           anchor={0.5}
-          scale={2}
+          scale={0.5}
           x={absolutePosition.x}
           y={absolutePosition.y}
         />

@@ -21,6 +21,7 @@ import { useElementStore } from '../utils/store';
 
 import Boat, { BoatType } from './Boat';
 import NewGame from './NewGame';
+import Map from './Map';
 
 // import GameOverModal from './GameOverModal'; // importez le composant
 // import Map from './Map';
@@ -56,7 +57,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // const [isGameOver, setIsGameOver] = useState(false);
     // const [hasPlayed, setHasPlayed] = useState(false);
   
-    const { _ip, hit_mob, map, add_hole, set_size, reset_holes, set_ip } =
+    const { map, add_hole, set_size, reset_holes, set_ip } =
       useElementStore((state) => state);
   
     // useEffect(() => {
@@ -84,9 +85,10 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
       }
       reset_holes();
   
+      console.log("pseudo", pseudo);
       const pseudoFelt = shortString.encodeShortString(pseudo);
       // create(account, ip, 1000, pseudoFelt); //, set_hit_mob, set_turn);
-      create(account, ip, 1000, pseudoFelt); //, set_hit_mob, set_turn);
+      create(account, ip, 1000, pseudoFelt, set_size); //, set_hit_mob, set_turn);
     };
   
     // useEffect(() => {
@@ -105,6 +107,8 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // }, [isGameOver]);
   
     useEffect(() => {
+      console.log("[CANVAS] generateGrid", map);
+      // set_size(map.length);
       setGrid(generateGrid(map));
     }, [map]);
   
@@ -135,7 +139,8 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // PIXI.Texture.from(heart).baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     // PIXI.Texture.from(skull).baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     const blurFilter = useMemo(() => new BlurFilter(4), []);
-    console.log("[Canvas] BOAT", boat);
+    // console.log("[Canvas] BOAT", boat);
+    // console.log("[Canvas] BOAT", boat);
     return (
         <div style={{ position: 'relative' }}>
           {map.size === 0 && <NewGame onClick={generateNewGame} onPseudoChange={setPseudo} />}
@@ -163,17 +168,21 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
             >
                 <Container sortableChildren={true}>
                 <Text text="Hello World" anchor={{ x: 0, y: 0 }} filters={[blurFilter]} />
-                <Text text="Hello World" anchor={{ x: 0.02, y: 0.02 }} />
-                    {/* <Map hoveredTile={hoveredTile} /> */}
-                    {boat.position && boat.health !== undefined && (
-                      <Boat
-                        type="classic"
-                        targetPosition={boat.position}
-                        isHovered={false} 
-                        health={boat.health}
-                        position={boat.position}
-                      />
-                    )}
+                {/* <Text text={game?.seed} anchor={{ x: 0.02, y: 0.02 }} /> */}
+                <Text text={boat?.position?.x} anchor={{ x: 0, y: 0 }} />
+                {/* <Text text={boat.position?.y} anchor={{ x: 5, y: 5 }} /> */}
+                <Map hoveredTile={hoveredTile} />  
+                {boat.position && boat.health !== undefined && (
+                  <Boat
+                    type="classic"
+                    targetPosition={boat.position}
+                    isHovered={false} 
+                    health={boat.health}
+                    position={boat.position}
+                  />
+                )}
+                
+
                 </Container>
             </Stage>
             

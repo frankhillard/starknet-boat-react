@@ -86,7 +86,7 @@ function App() {
           <Canvas setMusicPlaying={setMusicPlaying} />
         </div>
         <div>Moves Left: {moves ? `${moves['remaining']}` : 'Need to Spawn'}</div>
-        <div>Position: {position ? `${position.vec['x']}, ${position.vec['y']}` : 'Need to Spawn'}</div>
+        <div>Position: {position && position.vec ? `${position?.vec['x']}, ${position?.vec['y']}` : 'Need to Spawn'}</div>
       </div>
       <div className="card">
         <button onClick={() => move(account, Direction.Up)}>Move Up</button> <br />

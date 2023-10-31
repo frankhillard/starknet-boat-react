@@ -54,6 +54,7 @@ export function to_center(screen: { x: number; y: number }) {
 }
 
 export const generateGrid = (map: Map): GridElement[][] => {
+  console.log("[generateGrid]", map);
   const generated = Array.from({ length: map.size }, (_, x) =>
     Array.from({ length: map.size }, (_, y) => {
       const coordinate: Coordinate = { x, y };

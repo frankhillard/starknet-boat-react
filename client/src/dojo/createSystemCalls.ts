@@ -1,27 +1,30 @@
 import { SetupNetworkResult } from "./setupNetwork";
-import { Account } from "starknet";
+import { Account, shortString } from "starknet";
 import { poseidonHashMany } from 'micro-starknet';
-import { EntityIndex, getComponentValue } from "@latticexyz/recs";
+// import { EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { Component, Components, EntityIndex, Schema, getComponentValue, setComponent, updateComponent } from '@latticexyz/recs';
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
 import { updatePositionWithDirection } from "../utils";
-import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
+import { getEvents } from "@dojoengine/utils";
+// import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
-    { Boat, Game, Moves }: ClientComponents
+    { Boat, Game, Moves, Map }: ClientComponents
 ) {
 
     const create = async (
         signer: Account, 
         ip: number,
         seed: number,
-        pseudo: string
+        pseudo: string,
+        set_size: (size: number) => void,
     ) => {
         console.log("CREAAATE");
-        // const entityId = signer.address.toString() as EntityIndex;
+        const entityId = signer.address.toString() as EntityIndex;
         console.log('who', BigInt(ip).toString(16));
 
 
@@ -29,6 +32,12 @@ export function createSystemCalls(
         // Game.addOverride(gameId, {
         //     entity: entityId,
         //     value: { game_id: gameId, over: 0, seed: seed },
+        // });
+
+        // const mapId = uuid();
+        // Map.addOverride(mapId, {
+        //     entity: entityId,
+        //     value: { game_id: 0, over: 0, seed: seed },
         // });
 
         try {
@@ -39,10 +48,11 @@ export function createSystemCalls(
                 )
             );
             console.log('events', events);
-            
-            
-            setComponentsFromEvents(contractComponents, events);
-
+            if (events.length !== 0) {
+                const transformed_events = await setComponentsFromEvents(contractComponents, events);
+                //setComponentsFromEvents(contractComponents, events);
+                await executeEvents(transformed_events, set_size);
+            }
         } catch (e) {
             console.log(e)
             //Game.removeOverride(gameId);
@@ -147,3 +157,163 @@ export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
     const poseidon = poseidonHashMany([BigInt(keys.length), ...keys]);
     return parseInt(poseidon.toString()) as EntityIndex;
 }
+
+function hexToAscii(hex: string) {
+    let str = '';
+    for (let n = 2; n < hex.length; n += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+}
+
+export async function executeEvents(
+    events: TransformedEvent[],
+    // add_hole: (x: number, y: number) => void,
+    set_size: (size: number) => void,
+    // reset_holes: () => void,
+    // set_hit_mob: (mob: MobType) => void,
+    // set_turn: (mob: TileType) => void
+  ) {
+    const gameEvents = events.filter((e): e is GameEvent & ComponentData => e.type === 'Game');
+    // console.log('gameEvents', gameEvents);
+    for (const e of gameEvents) {
+      setComponent(e.component, e.entityIndex, e.componentValues);
+    }
+  
+    const mapEvents = events.filter((e): e is MapEvent & ComponentData => e.type === 'Map');
+    // console.log('mapEvents', mapEvents);
+    for (const e of mapEvents) {
+        console.log("SET SIZE", e.size);
+      set_size(e.size);
+  
+    //   Map_size = e.size;
+    //   if (e.spawn === 0) {
+    //     reset_holes();
+    //   }
+      setComponent(e.component, e.entityIndex, e.componentValues);
+    }
+  
+    // const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
+    // // console.log('tileEvents', tileEvents);
+    // for (const e of tileEvents) {
+    // //   if (e._type === TileType.Hole) {
+    // //     add_hole(e.x, e.y);
+    // //     Number_of_holes++;
+    // //   }
+    //   setComponent(e.component, e.entityIndex, e.componentValues);
+    // }
+  
+    await sleep(1000);
+  }
+  
+
+  type MapEvent = ComponentData & {
+    type: 'Map';
+    game_id: number;
+    level: number;
+    size: number;
+    spawn: number;
+    score: number;
+    over: boolean;
+    name: string;
+  };
+  
+  function handleMapEvent(
+    keys: bigint[],
+    values: string[]
+  ): Omit<MapEvent, 'component' | 'componentValues' | 'entityIndex'> {
+    const [game_id] = keys;
+    const [level, size, spawn, score, over, name] = values;
+    console.log(
+      `[Map: KEYS: (game_id: ${game_id}) - VALUES: (level: ${level}, size: ${size}, spawn: ${spawn}, score: ${Number(
+        score
+      )}), over: ${Boolean(Number(over))}, name: ${name}]`
+    );
+  
+    return {
+      type: 'Map',
+      game_id: Number(game_id),
+      level: Number(level),
+      size: Number(size),
+      spawn: Number(spawn),
+      score: Number(score),
+      over: Boolean(over),
+      name: shortString.decodeShortString(name),
+    };
+  }
+
+  type GameEvent = ComponentData & {
+    type: 'Game';
+    player_id: number;
+    game_id: number;
+    over: boolean;
+    seed: number;
+  };
+  
+  function handleGameEvent(
+    keys: bigint[],
+    values: string[]
+  ): Omit<GameEvent, 'component' | 'componentValues' | 'entityIndex'> {
+    const [player_id] = keys.map((k) => Number(k));
+    const [game_id, over, seed] = values.map((v) => Number(v));
+    console.log(
+      `[Game: KEYS: (player_id: ${player_id}) - VALUES: (game_id: ${game_id}, over: ${Boolean(over)}, seed: ${seed}, )]`
+    );
+    return {
+      type: 'Game',
+      player_id,
+      game_id,
+      over: Boolean(over),
+      seed,
+    };
+  }
+
+type ComponentData = {
+    component: Component;
+    componentValues: Schema;
+    entityIndex: EntityIndex;
+  };
+  
+  type TransformedEvent = GameEvent | MapEvent | ComponentData;
+  
+  export async function setComponentsFromEvents(components: Components, events: Event[]): Promise<TransformedEvent[]> {
+    const transformedEvents = [];
+  
+    for (const event of events) {
+      const componentName = hexToAscii(event.data[0]);
+      const keysNumber = parseInt(event.data[1]);
+      const keys = event.data.slice(2, 2 + keysNumber).map((key) => BigInt(key));
+      let index = 2 + keysNumber + 1;
+      const numberOfValues = parseInt(event.data[index++]);
+      const values = event.data.slice(index, index + numberOfValues);
+  
+      // Component
+      const component = components[componentName];
+      const componentValues = Object.keys(component.schema).reduce((acc: Schema, key, index) => {
+        const value = values[index];
+        acc[key] = Number(value);
+        return acc;
+      }, {});
+      const entity = getEntityIdFromKeys(keys);
+  
+      const baseEventData = {
+        component,
+        componentValues,
+        entityIndex: entity,
+      };
+  
+      switch (componentName) {
+        case 'Map':
+            transformedEvents.push({ ...handleMapEvent(keys, values), ...baseEventData });
+            break;
+        case 'Game':
+            transformedEvents.push({ ...handleGameEvent(keys, values), ...baseEventData });
+            break;
+        default:
+
+      }
+    }
+  
+    return transformedEvents;
+  }
+  
