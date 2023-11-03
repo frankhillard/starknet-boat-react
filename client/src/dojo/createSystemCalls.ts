@@ -104,7 +104,6 @@ export function createSystemCalls(
     const move = async (
       signer: Account, 
       direction: Direction, 
-      set_position: (x: number, y: number) => void,
     ) => {
         const entityId = signer.address.toString() as EntityIndex;
         console.log("MOOOOVE");
@@ -130,7 +129,7 @@ export function createSystemCalls(
             console.log('moveevents', events);
             const transformed_events = await setComponentsFromEvents(contractComponents, events);
             // setComponentsFromEvents(contractComponents, events);
-            await executeEvents(transformed_events, undefined, undefined, set_position);
+            await executeEvents(transformed_events, undefined, undefined);
 
         } catch (e) {
             console.log(e)
@@ -189,7 +188,7 @@ export async function executeEvents(
     events: TransformedEvent[],
     add_hole: (x: number, y: number) => void,
     set_size: (size: number) => void,
-    set_position: (x: number, y: number) => void,
+    // set_position: (x: number, y: number) => void,
     // reset_holes: () => void,
     // set_hit_mob: (mob: MobType) => void,
     // set_turn: (mob: TileType) => void
@@ -201,16 +200,17 @@ export async function executeEvents(
     }
   
     const boatEvents = events.filter((e): e is BoatEvent & ComponentData => e.type === 'Boat');
-    console.log('boatEvents', boatEvents);
+    // console.log('boatEvents', boatEvents);
     for (const e of boatEvents) {
-      set_position(e.vec.x, e.vec.y);
+      // set_position(e.vec.x, e.vec.y);
+      console.log('[executeEvents] Boat', e.entityIndex, e.componentValues);
       setComponent(e.component, e.entityIndex, e.componentValues);
     }
 
     const mapEvents = events.filter((e): e is MapEvent & ComponentData => e.type === 'Map');
     // console.log('mapEvents', mapEvents);
     for (const e of mapEvents) {
-        console.log("SET SIZE", e.size);
+        console.log("[executeEvents] SET SIZE", e.size);
         set_size(e.size);
   
     //   Map_size = e.size;
@@ -221,7 +221,7 @@ export async function executeEvents(
     }
   
     const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
-    console.log('tileEvents', tileEvents);
+    // console.log('tileEvents', tileEvents);
     for (const e of tileEvents) {
       if (e._type === TileType.Ground) {
         add_hole(e.x, e.y);

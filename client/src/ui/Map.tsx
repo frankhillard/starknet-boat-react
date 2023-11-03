@@ -19,9 +19,8 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
   const [grid, setGrid] = useState<GridElement[][]>([]);
 
   const { ip, hit_mob, map } = useElementStore((state) => state);
-  console.log("Draw MAP", map);
+  // console.log("Draw MAP", map);
   useEffect(() => {
-    console.log("[MAP] generateGrid");
     setGrid(generateGrid(map));
     console.log("[MAP] grid generated", grid);
   }, [map]);

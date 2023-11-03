@@ -53,7 +53,7 @@ export const useComponentStates = () => {
   // console.log('[useComponentSates] game', game);
 
   useEffect(() => {
-    console.log('[useComponentSates] game (use effect)', game);
+    // console.log('[useComponentSates] game (use effect)', game);
   }, [game]);
   
   // ===================================================================================================================
@@ -64,7 +64,7 @@ export const useComponentStates = () => {
 
   const map = useComponentValue(Map, entityId2);
   useEffect(() => {
-    console.log('[useComponentSates] map (use effect)', map);
+    // console.log('[useComponentSates] map (use effect)', map);
     if (map !== undefined)
       set_size(map.length);
   }, [map]);
@@ -81,13 +81,12 @@ export const useComponentStates = () => {
   );
 
   useEffect(() => {
-    console.log('[useComponentSates] boat (use effect)', boat);
-    if (boat !== undefined)
-      set_position(boat?.vec);
+    // console.log('[useComponentSates] boat (use effect)', boat);
+    // if (boat !== undefined)
+    //   set_position(boat?.vec);
   }, [boat]);
 
   const boat_position = (boat !== undefined) ? boat.vec : {x: 0, y: 0};
-  console.log('[useComponentSates] boat position', boat_position);
 
   return {
     game: { id: game?.game_id, over: game?.over, seed: game?.seed },

@@ -222,16 +222,16 @@ const Boat: React.FC<BoatProps> = ({
 //   if (frames.length === 0) {
 //     return null;
 //   }
-  console.log("absolutePosition", absolutePosition);
+  // console.log("absolutePosition", absolutePosition);
   return (
     <>
     <Sprite
-          key={`${absolutePosition.x}-${absolutePosition.y}`}
+          key={`boat`}
           image={boatpic}
           anchor={0.5}
           scale={0.5}
-          x={absolutePosition.x}
-          y={absolutePosition.y}
+          x={to_center(position).x}
+          y={to_center(position).y}
         />
     </>
   );

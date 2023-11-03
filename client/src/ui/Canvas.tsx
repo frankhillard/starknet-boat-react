@@ -174,7 +174,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
             }}
             >
                 <Container sortableChildren={true}>
-                <Text text="Hello World" anchor={{ x: 0, y: 0 }} filters={[blurFilter]} />
+                {/* <Text text="Hello World" anchor={{ x: 0, y: 0 }} filters={[blurFilter]} /> */}
                 {/* <Text text={game?.seed} anchor={{ x: 0.02, y: 0.02 }} /> */}
                 <Text text={boat?.position?.x} anchor={{ x: 0, y: 0 }} />
                 {/* <Text text={boat.position?.y} anchor={{ x: 5, y: 5 }} /> */}
