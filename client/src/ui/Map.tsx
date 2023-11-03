@@ -3,6 +3,8 @@ import { SCALE_MODES, Texture } from 'pixi.js';
 import { useEffect, useState } from 'react';
 import groundTile from '../assets/0_1.png';
 import waterTile from '../assets/water_full.png';
+import highwaterTile from '../assets/high_water.png';
+
 // import waterTile2 from '../assets/tilesets/water_left.png';
 // import waterTile1 from '../assets/tilesets/water_middle.png';
 // import waterTile3 from '../assets/tilesets/water_right.png';
@@ -31,45 +33,45 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
   // const newGrid = grid;
   const newGrid = [
     [
-      { x: -2, y: 0, layer: 'base', type: 'water' },
-      { x: -2, y: 1, layer: 'base', type: 'water' },
-      { x: -2, y: 2, layer: 'base', type: 'water' },
-      { x: -2, y: 3, layer: 'base', type: 'water' },
-      { x: -2, y: 4, layer: 'base', type: 'water' },
-      { x: -2, y: 5, layer: 'base', type: 'water' },
-      { x: -2, y: 6, layer: 'base', type: 'water' },
-      { x: -2, y: 7, layer: 'base', type: 'water' },
+      { x: -2, y: 0, layer: 'base', type: 'high_water' },
+      { x: -2, y: 1, layer: 'base', type: 'high_water' },
+      { x: -2, y: 2, layer: 'base', type: 'high_water' },
+      { x: -2, y: 3, layer: 'base', type: 'high_water' },
+      { x: -2, y: 4, layer: 'base', type: 'high_water' },
+      { x: -2, y: 5, layer: 'base', type: 'high_water' },
+      { x: -2, y: 6, layer: 'base', type: 'high_water' },
+      { x: -2, y: 7, layer: 'base', type: 'high_water' },
     ],
     [
-      { x: -1, y: 0, layer: 'base', type: 'water' },
-      { x: -1, y: 1, layer: 'base', type: 'water' },
-      { x: -1, y: 2, layer: 'base', type: 'water' },
-      { x: -1, y: 3, layer: 'base', type: 'water' },
-      { x: -1, y: 4, layer: 'base', type: 'water' },
-      { x: -1, y: 5, layer: 'base', type: 'water' },
-      { x: -1, y: 6, layer: 'base', type: 'water' },
-      { x: -1, y: 7, layer: 'base', type: 'water' },
+      { x: -1, y: 0, layer: 'base', type: 'high_water' },
+      { x: -1, y: 1, layer: 'base', type: 'high_water' },
+      { x: -1, y: 2, layer: 'base', type: 'high_water' },
+      { x: -1, y: 3, layer: 'base', type: 'high_water' },
+      { x: -1, y: 4, layer: 'base', type: 'high_water' },
+      { x: -1, y: 5, layer: 'base', type: 'high_water' },
+      { x: -1, y: 6, layer: 'base', type: 'high_water' },
+      { x: -1, y: 7, layer: 'base', type: 'high_water' },
     ],
     ...grid,
     [
-      { x: 8, y: 0, layer: 'base', type: 'water' },
-      { x: 8, y: 1, layer: 'base', type: 'water' },
-      { x: 8, y: 2, layer: 'base', type: 'water' },
-      { x: 8, y: 3, layer: 'base', type: 'water' },
-      { x: 8, y: 4, layer: 'base', type: 'water' },
-      { x: 8, y: 5, layer: 'base', type: 'water' },
-      { x: 8, y: 6, layer: 'base', type: 'water' },
-      { x: 8, y: 7, layer: 'base', type: 'water' },
+      { x: 8, y: 0, layer: 'base', type: 'high_water' },
+      { x: 8, y: 1, layer: 'base', type: 'high_water' },
+      { x: 8, y: 2, layer: 'base', type: 'high_water' },
+      { x: 8, y: 3, layer: 'base', type: 'high_water' },
+      { x: 8, y: 4, layer: 'base', type: 'high_water' },
+      { x: 8, y: 5, layer: 'base', type: 'high_water' },
+      { x: 8, y: 6, layer: 'base', type: 'high_water' },
+      { x: 8, y: 7, layer: 'base', type: 'high_water' },
     ],
     [
-      { x: 9, y: 0, layer: 'base', type: 'water' },
-      { x: 9, y: 1, layer: 'base', type: 'water' },
-      { x: 9, y: 2, layer: 'base', type: 'water' },
-      { x: 9, y: 3, layer: 'base', type: 'water' },
-      { x: 9, y: 4, layer: 'base', type: 'water' },
-      { x: 9, y: 5, layer: 'base', type: 'water' },
-      { x: 9, y: 6, layer: 'base', type: 'water' },
-      { x: 9, y: 7, layer: 'base', type: 'water' },
+      { x: 9, y: 0, layer: 'base', type: 'high_water' },
+      { x: 9, y: 1, layer: 'base', type: 'high_water' },
+      { x: 9, y: 2, layer: 'base', type: 'high_water' },
+      { x: 9, y: 3, layer: 'base', type: 'high_water' },
+      { x: 9, y: 4, layer: 'base', type: 'high_water' },
+      { x: 9, y: 5, layer: 'base', type: 'high_water' },
+      { x: 9, y: 6, layer: 'base', type: 'high_water' },
+      { x: 9, y: 7, layer: 'base', type: 'high_water' },
     ],
   ];
 
@@ -77,11 +79,11 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
 
   return newGrid.map((row: any, i) => {
     const newRow = [
-      { x: i - 2, y: -2, layer: 'base', type: 'water' },
-      { x: i - 2, y: -1, layer: 'base', type: 'water' },
+      { x: i - 2, y: -2, layer: 'base', type: 'high_water' },
+      { x: i - 2, y: -1, layer: 'base', type: 'high_water' },
       ...row,
-      { x: i - 2, y: 8, layer: 'base', type: 'water' },
-      { x: i - 2, y: 9, layer: 'base', type: 'water' },
+      { x: i - 2, y: 8, layer: 'base', type: 'high_water' },
+      { x: i - 2, y: 9, layer: 'base', type: 'high_water' },
     ];
     return newRow.map((tile: any) => {
 
@@ -94,6 +96,10 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
       if (tile.type === 'water') {
         tileImage = waterTile;
       }
+      else if (tile.type === 'high_water') {
+        tileImage = highwaterTile;
+      }
+
       Texture.from(tileImage).baseTexture.scaleMode = SCALE_MODES.NEAREST;
       return (
         <Sprite
