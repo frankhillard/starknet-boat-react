@@ -1,6 +1,6 @@
-import { Sprite } from '@pixi/react';
+import { Sprite, Graphics } from '@pixi/react';
 import { SCALE_MODES, Texture } from 'pixi.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import groundTile from '../assets/0_1.png';
 import waterTile from '../assets/water_full.png';
 import highwaterTile from '../assets/high_water.png';
@@ -11,6 +11,8 @@ import highwaterTile from '../assets/high_water.png';
 import { Coordinate, GridElement } from '../type/GridElement';
 import { H_OFFSET, WIDTH, generateGrid, to_screen_coordinate } from '../utils/grid';
 import { useElementStore } from '../utils/store';
+import WindArrow from './WindArrow';
+
 
 interface MapProps {
   hoveredTile?: Coordinate;
@@ -100,16 +102,31 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
         tileImage = highwaterTile;
       }
 
+      // const draw = useCallback(
+      //   (g) => {
+      //     g.clear();
+      //     g.beginFill(0xff3300);
+      //     g.drawRect(screenPos.x, screenPos.y, 20, 3);
+      //     g.endFill();
+      //   },
+      //   [grid],
+      // );
+
       Texture.from(tileImage).baseTexture.scaleMode = SCALE_MODES.NEAREST;
       return (
-        <Sprite
-          key={`${tile.x}-${tile.y}`}
-          image={tileImage}
-          anchor={0.5}
-          scale={2}
-          x={screenPos.x + WIDTH / 2}
-          y={screenPos.y + H_OFFSET - adjustment}
-        />
+        <>
+          <Sprite
+            key={`${tile.x}-${tile.y}`}
+            image={tileImage}
+            anchor={0.5}
+            scale={2}
+            x={screenPos.x + WIDTH / 2}
+            y={screenPos.y + H_OFFSET - adjustment}
+          />
+          {/* <Graphics draw={draw} /> */}
+          <WindArrow x={screenPos.x + WIDTH / 2} y={screenPos.y + H_OFFSET - adjustment} force={6} direction={1} />
+        </>
+                
       );
     });
   });

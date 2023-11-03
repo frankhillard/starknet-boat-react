@@ -26,6 +26,7 @@ export function createSystemCalls(
         pseudo: string,
         add_hole: (x: number, y: number) => void,
         set_size: (size: number) => void,
+        set_wind: (x: number, y: number, wx: number, wy: number) => void,
     ) => {
         console.log("CREAAATE");
         const entityId = signer.address.toString() as EntityIndex;
@@ -55,7 +56,7 @@ export function createSystemCalls(
             if (events.length !== 0) {
                 const transformed_events = await setComponentsFromEvents(contractComponents, events);
                 // setComponentsFromEvents(contractComponents, events);
-                await executeEvents(transformed_events, add_hole, set_size, undefined);
+                await executeEvents(transformed_events, add_hole, set_size, set_wind);
             }
         } catch (e) {
             console.log(e)
@@ -188,6 +189,7 @@ export async function executeEvents(
     events: TransformedEvent[],
     add_hole: (x: number, y: number) => void,
     set_size: (size: number) => void,
+    set_wind: (x: number, y: number, wx: number, wy: number) => void
     // set_position: (x: number, y: number) => void,
     // reset_holes: () => void,
     // set_hit_mob: (mob: MobType) => void,
@@ -228,6 +230,14 @@ export async function executeEvents(
         Number_of_holes++;
       }
       setComponent(e.component, e.entityIndex, e.componentValues);
+    }
+
+    const windEvents = events.filter((e): e is WindEvent & ComponentData => e.type === 'Wind');
+    // console.log('windEvents', windEvents);
+    for (const e of windEvents) {
+        console.log("[executeEvents] SET WIND", e.x, e.y);
+        set_wind(e.x, e.y, e.wx, e.wy);
+        setComponent(e.component, e.entityIndex, e.componentValues);
     }
 
     // const otherEvents = events;
@@ -311,7 +321,7 @@ export async function executeEvents(
     vec: Vec2;
   };
 
-  handleBoatEvent
+  
   function handleBoatEvent(
     keys: bigint[],
     values: string[]
@@ -340,7 +350,7 @@ export async function executeEvents(
     y: number;
   };
 
-  handleTileEvent
+  
   function handleTileEvent(
     keys: bigint[],
     values: string[]
@@ -363,6 +373,37 @@ export async function executeEvents(
 
 
 
+  type WindEvent = ComponentData & {
+    type: 'Wind';
+    game_id: number;
+    x: number;
+    y: number;
+    wx: number;
+    wy: number;
+    force: number;
+  };
+
+  
+  function handleWindEvent(
+    keys: bigint[],
+    values: string[]
+  ): Omit<TileEvent, 'component' | 'componentValues' | 'entityIndex'> {
+    console.log("handleWindEvent", values);
+    const [game_id, x, y] = keys.map((k) => Number(k));
+    const [wx, wy] = values.map((v) => Number(v));
+    console.log(
+      `[Wind: KEYS: (game_id: ${game_id},x: ${x}, y: ${y}) - VALUES: (wx: ${wx}, wy: ${wy})]`
+    );
+    return {
+      type: 'Wind',
+      game_id,
+      x,
+      y, 
+      wx,
+      wy
+    };
+  }
+
 
 
 
@@ -372,7 +413,7 @@ type ComponentData = {
     entityIndex: EntityIndex;
   };
   
-  type TransformedEvent = GameEvent | MapEvent | TileEvent | BoatEvent | ComponentData;
+  type TransformedEvent = GameEvent | MapEvent | TileEvent | BoatEvent | WindEvent | ComponentData;
   
   export async function setComponentsFromEvents(components: Components, events: Event[]): Promise<TransformedEvent[]> {
     const transformedEvents = [];
@@ -411,6 +452,9 @@ type ComponentData = {
             break;
         case 'Tile':
             transformedEvents.push({ ...handleTileEvent(keys, values), ...baseEventData });
+            break;
+        case 'Wind':
+            transformedEvents.push({ ...handleWindEvent(keys, values), ...baseEventData });
             break;
         default:
 

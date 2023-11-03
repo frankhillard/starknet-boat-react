@@ -35,7 +35,7 @@ export const useComponentStates = () => {
     account: { create, list, select, account, isDeploying }
   } = useDojo();
 
-  const { ip, hit_mob, map: map_store, position, add_hole, reset_holes, set_size, set_position } = useElementStore((state) => state);
+  const { ip, hit_mob, map: map_store, position, add_hole, reset_holes, set_size, set_wind } = useElementStore((state) => state);
   // console.log('ip', ip);
 
   // ===================================================================================================================

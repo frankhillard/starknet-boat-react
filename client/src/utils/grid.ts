@@ -62,8 +62,9 @@ export const generateGrid = (map: Map): GridElement[][] => {
       // Générer aléatoirement le type (eau ou sol)
 
       const type = 'water' as ElementType;
+      const wind = {x: 0, y: 0 } as Coordinate;
 
-      return { ...coordinate, layer, type };
+      return { ...coordinate, layer, type, wind };
     })
   );
 

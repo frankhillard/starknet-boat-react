@@ -57,7 +57,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // const [isGameOver, setIsGameOver] = useState(false);
     // const [hasPlayed, setHasPlayed] = useState(false);
   
-    const { map, add_hole, set_size, reset_holes, set_ip } =
+    const { map, add_hole, set_size, reset_holes, set_ip, set_wind } =
       useElementStore((state) => state);
   
     // useEffect(() => {
@@ -89,7 +89,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
       const pseudoFelt = pseudo !== undefined ? shortString.encodeShortString(pseudo): "anonymous";
       console.log("pseudoFelt", pseudoFelt);
       // create(account, ip, 1000, pseudoFelt); //, set_hit_mob, set_turn);
-      create(account, ip, 1000, "ZEEZ", add_hole, set_size); //, set_hit_mob, set_turn);
+      create(account, ip, 1000, "ZEEZ", add_hole, set_size, set_wind); //, set_hit_mob, set_turn);
     };
   
     // useEffect(() => {

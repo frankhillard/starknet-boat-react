@@ -1,11 +1,16 @@
 import { create } from 'zustand';
 import { TileType } from '../hooks/useComponentStates';
-import { Coordinate } from '../type/GridElement';
+import { Coordinate, WindDirection } from '../type/GridElement';
 import { BoatType } from '../ui/Boat';
+
+export type WindCell = Coordinate & {
+  direction: WindDirection;
+};
 
 export interface Map {
   size: number;
   holes: Coordinate[];
+  winds: WindCell[];
 }
 
 // export interface Score {
@@ -23,6 +28,7 @@ interface State {
   set_size: (size: number) => void;
   reset_holes: () => void;
   set_ip: (ip: number) => void;
+  set_wind: (x: number, y: number, wx: number, wy: number) => void;
   // set_position: (x: number, y: number) => void;
 //   set_hit_mob: (mob: MobType) => void;
 //   set_turn: (mob: TileType) => void;
@@ -42,6 +48,14 @@ export const useElementStore = create<State>((set) => ({
     })),
   set_size: (size: number) => set((state) => ({ map: { size, holes: state.map.holes } })),
   set_ip: (ip: number) => set(() => ({ ip })),
+  set_wind: (x: number, y: number, wx: number, wy: number) =>
+    set((state) => ({
+      map: { 
+        size: state.map.size, 
+        holes: state.map.holes, 
+        winds: [...state.map.winds, { x, y, direction: { x: wx, y: wy } }] },
+    })),
+
   // set_position: (x: number, y: number) =>
   //   set((state) => ({
   //     position: { x, y },

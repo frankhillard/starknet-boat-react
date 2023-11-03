@@ -32,7 +32,7 @@ function App() {
 
   const [isMusicPlaying, setMusicPlaying] = useState(false);
 
-  const { ip, hit_mob, map: map_store, position: store_position, add_hole, reset_holes, set_size } = useElementStore((state) => state);
+  const { ip, hit_mob, map: map_store, position: store_position, add_hole, reset_holes, set_size, set_wind } = useElementStore((state) => state);
   // console.log('ip', ip);
 
 
