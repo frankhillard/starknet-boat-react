@@ -131,7 +131,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
 
     useEffect(() => {
       if (boat !== undefined) {
-        console.log("[CANVAS] boat (use efect)", boat);
+        // console.log("[CANVAS] boat (use efect)", boat);
       }
     }, [boat]);
     // const { knightNeighbors, barbarianNeighbors, bowmanNeighbors, wizardNeighbors } = useGrid(grid);
@@ -146,7 +146,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // PIXI.Texture.from(skull).baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     const blurFilter = useMemo(() => new BlurFilter(4), []);
     // console.log("[Canvas] BOAT", boat);
-    console.log("[Canvas] BOAT", boat);
+    // console.log("[Canvas] BOAT", boat);
     return (
         <div style={{ position: 'relative' }}>
           {map.size === 0 && <NewGame onClick={generateNewGame} onPseudoChange={setPseudo} />}

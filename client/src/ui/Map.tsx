@@ -77,7 +77,7 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
     ],
   ];
 
-  console.log("render", newGrid);
+  // console.log("render", newGrid);
 
   return newGrid.map((row: any, i) => {
     const newRow = [
@@ -88,7 +88,8 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
       { x: i - 2, y: 9, layer: 'base', type: 'high_water' },
     ];
     return newRow.map((tile: any) => {
-
+      // map.winds.foreach ((wind) => {
+      // });
       const screenPos = to_screen_coordinate(tile);
       const adjustment =
         hoveredTile && hoveredTile.x === tile.x && hoveredTile.y === tile.y ? 5 : 0;
@@ -102,17 +103,9 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
         tileImage = highwaterTile;
       }
 
-      // const draw = useCallback(
-      //   (g) => {
-      //     g.clear();
-      //     g.beginFill(0xff3300);
-      //     g.drawRect(screenPos.x, screenPos.y, 20, 3);
-      //     g.endFill();
-      //   },
-      //   [grid],
-      // );
-
       Texture.from(tileImage).baseTexture.scaleMode = SCALE_MODES.NEAREST;
+
+
       return (
         <>
           <Sprite
@@ -124,7 +117,7 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
             y={screenPos.y + H_OFFSET - adjustment}
           />
           {/* <Graphics draw={draw} /> */}
-          <WindArrow x={screenPos.x + WIDTH / 2} y={screenPos.y + H_OFFSET - adjustment} force={6} direction={1} />
+          <WindArrow x={screenPos.x + WIDTH / 2} y={screenPos.y + H_OFFSET - adjustment} force={tile.wind_speed} direction={1} />
         </>
                 
       );

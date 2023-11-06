@@ -64,11 +64,15 @@ export const generateGrid = (map: Map): GridElement[][] => {
       const type = 'water' as ElementType;
       const wind = {x: 0, y: 0 } as Coordinate;
 
-      return { ...coordinate, layer, type, wind };
+      return { ...coordinate, layer, type, wind_speed: 0, wind_direction: wind };
     })
   );
 
   map.holes.forEach((hole) => (generated[hole.x][hole.y].type = 'ground'));
+
+  if (map.winds && map.winds.length > 0)
+    map.winds.forEach((wind) => (generated[wind.x][wind.y].wind_speed = wind.force));
+
 
   return generated;
 };

@@ -4,6 +4,7 @@ import { Coordinate, WindDirection } from '../type/GridElement';
 import { BoatType } from '../ui/Boat';
 
 export type WindCell = Coordinate & {
+  force: number;
   direction: WindDirection;
 };
 
@@ -28,7 +29,7 @@ interface State {
   set_size: (size: number) => void;
   reset_holes: () => void;
   set_ip: (ip: number) => void;
-  set_wind: (x: number, y: number, wx: number, wy: number) => void;
+  set_wind: (x: number, y: number, force: number, wx: number, wy: number) => void;
   // set_position: (x: number, y: number) => void;
 //   set_hit_mob: (mob: MobType) => void;
 //   set_turn: (mob: TileType) => void;
@@ -48,12 +49,12 @@ export const useElementStore = create<State>((set) => ({
     })),
   set_size: (size: number) => set((state) => ({ map: { size, holes: state.map.holes } })),
   set_ip: (ip: number) => set(() => ({ ip })),
-  set_wind: (x: number, y: number, wx: number, wy: number) =>
+  set_wind: (x: number, y: number, force: number, wx: number, wy: number) =>
     set((state) => ({
       map: { 
         size: state.map.size, 
         holes: state.map.holes, 
-        winds: [...state.map.winds, { x, y, direction: { x: wx, y: wy } }] },
+        winds: [...state.map.winds, { x, y, force: force, direction: { x: wx, y: wy } }] },
     })),
 
   // set_position: (x: number, y: number) =>

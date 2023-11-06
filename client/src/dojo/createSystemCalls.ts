@@ -26,7 +26,7 @@ export function createSystemCalls(
         pseudo: string,
         add_hole: (x: number, y: number) => void,
         set_size: (size: number) => void,
-        set_wind: (x: number, y: number, wx: number, wy: number) => void,
+        set_wind: (x: number, y: number, force: number, wx: number, wy: number) => void,
     ) => {
         console.log("CREAAATE");
         const entityId = signer.address.toString() as EntityIndex;
@@ -189,7 +189,7 @@ export async function executeEvents(
     events: TransformedEvent[],
     add_hole: (x: number, y: number) => void,
     set_size: (size: number) => void,
-    set_wind: (x: number, y: number, wx: number, wy: number) => void
+    set_wind: (x: number, y: number, force: number, wx: number, wy: number) => void
     // set_position: (x: number, y: number) => void,
     // reset_holes: () => void,
     // set_hit_mob: (mob: MobType) => void,
@@ -236,7 +236,7 @@ export async function executeEvents(
     // console.log('windEvents', windEvents);
     for (const e of windEvents) {
         console.log("[executeEvents] SET WIND", e.x, e.y);
-        set_wind(e.x, e.y, e.wx, e.wy);
+        set_wind(e.x, e.y, 6, e.wx, e.wy);
         setComponent(e.component, e.entityIndex, e.componentValues);
     }
 

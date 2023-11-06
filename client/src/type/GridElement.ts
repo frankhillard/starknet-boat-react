@@ -15,6 +15,7 @@ export type WindDirection = {
 export type GridElement = Coordinate & {
   layer: Layer;
   type: ElementType;
-  wind: WindDirection;
+  wind_speed: number;
+  wind_direction: WindDirection;
 };
 
