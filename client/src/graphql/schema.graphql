@@ -9,11 +9,36 @@ query getEntities {
             remaining
             last_direction
           }
-          ... on Position {
+          ... on Boat {
             vec {
               x
               y
             }
+          }
+          ... on Game {
+            game_id
+            over
+            seed
+          }
+          ... on Map {
+            game_id
+            length
+            width
+          }
+          ... on Tile {
+            game_id
+            index
+            _type
+            x
+            y
+          }
+          ... on Wind {
+            game_id
+            x
+            y
+            wx
+            wy
+            force
           }
         }
       }
