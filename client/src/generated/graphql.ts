@@ -268,7 +268,7 @@ export type ModelEdge = {
   node?: Maybe<Model>;
 };
 
-export type ModelUnion = Boat | Game | Map | Moves | Tile;
+export type ModelUnion = Boat | Game | Map | Moves | Tile | Wind;
 
 export type Moves = {
   __typename?: 'Moves';
@@ -342,6 +342,7 @@ export type Query = {
   systemCalls?: Maybe<SystemCallConnection>;
   systems?: Maybe<SystemConnection>;
   tileModels?: Maybe<TileConnection>;
+  windModels?: Maybe<WindConnection>;
 };
 
 
@@ -490,6 +491,18 @@ export type QueryTileModelsArgs = {
   where?: InputMaybe<TileWhereInput>;
 };
 
+
+export type QueryWindModelsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<WindOrder>;
+  where?: InputMaybe<WindWhereInput>;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   entityUpdated: Entity;
@@ -623,10 +636,92 @@ export type Vec2 = {
   y?: Maybe<Scalars['u32']['output']>;
 };
 
+export type Wind = {
+  __typename?: 'Wind';
+  entity?: Maybe<Entity>;
+  force?: Maybe<Scalars['u32']['output']>;
+  game_id?: Maybe<Scalars['u32']['output']>;
+  wx?: Maybe<Scalars['u32']['output']>;
+  wy?: Maybe<Scalars['u32']['output']>;
+  x?: Maybe<Scalars['u32']['output']>;
+  y?: Maybe<Scalars['u32']['output']>;
+};
+
+export type WindConnection = {
+  __typename?: 'WindConnection';
+  edges?: Maybe<Array<Maybe<WindEdge>>>;
+  total_count: Scalars['Int']['output'];
+};
+
+export type WindEdge = {
+  __typename?: 'WindEdge';
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  node?: Maybe<Wind>;
+};
+
+export type WindOrder = {
+  direction: OrderDirection;
+  field: WindOrderField;
+};
+
+export enum WindOrderField {
+  Force = 'FORCE',
+  GameId = 'GAME_ID',
+  Wx = 'WX',
+  Wy = 'WY',
+  X = 'X',
+  Y = 'Y'
+}
+
+export type WindWhereInput = {
+  force?: InputMaybe<Scalars['u32']['input']>;
+  forceEQ?: InputMaybe<Scalars['u32']['input']>;
+  forceGT?: InputMaybe<Scalars['u32']['input']>;
+  forceGTE?: InputMaybe<Scalars['u32']['input']>;
+  forceLT?: InputMaybe<Scalars['u32']['input']>;
+  forceLTE?: InputMaybe<Scalars['u32']['input']>;
+  forceNEQ?: InputMaybe<Scalars['u32']['input']>;
+  game_id?: InputMaybe<Scalars['u32']['input']>;
+  game_idEQ?: InputMaybe<Scalars['u32']['input']>;
+  game_idGT?: InputMaybe<Scalars['u32']['input']>;
+  game_idGTE?: InputMaybe<Scalars['u32']['input']>;
+  game_idLT?: InputMaybe<Scalars['u32']['input']>;
+  game_idLTE?: InputMaybe<Scalars['u32']['input']>;
+  game_idNEQ?: InputMaybe<Scalars['u32']['input']>;
+  wx?: InputMaybe<Scalars['u32']['input']>;
+  wxEQ?: InputMaybe<Scalars['u32']['input']>;
+  wxGT?: InputMaybe<Scalars['u32']['input']>;
+  wxGTE?: InputMaybe<Scalars['u32']['input']>;
+  wxLT?: InputMaybe<Scalars['u32']['input']>;
+  wxLTE?: InputMaybe<Scalars['u32']['input']>;
+  wxNEQ?: InputMaybe<Scalars['u32']['input']>;
+  wy?: InputMaybe<Scalars['u32']['input']>;
+  wyEQ?: InputMaybe<Scalars['u32']['input']>;
+  wyGT?: InputMaybe<Scalars['u32']['input']>;
+  wyGTE?: InputMaybe<Scalars['u32']['input']>;
+  wyLT?: InputMaybe<Scalars['u32']['input']>;
+  wyLTE?: InputMaybe<Scalars['u32']['input']>;
+  wyNEQ?: InputMaybe<Scalars['u32']['input']>;
+  x?: InputMaybe<Scalars['u32']['input']>;
+  xEQ?: InputMaybe<Scalars['u32']['input']>;
+  xGT?: InputMaybe<Scalars['u32']['input']>;
+  xGTE?: InputMaybe<Scalars['u32']['input']>;
+  xLT?: InputMaybe<Scalars['u32']['input']>;
+  xLTE?: InputMaybe<Scalars['u32']['input']>;
+  xNEQ?: InputMaybe<Scalars['u32']['input']>;
+  y?: InputMaybe<Scalars['u32']['input']>;
+  yEQ?: InputMaybe<Scalars['u32']['input']>;
+  yGT?: InputMaybe<Scalars['u32']['input']>;
+  yGTE?: InputMaybe<Scalars['u32']['input']>;
+  yLT?: InputMaybe<Scalars['u32']['input']>;
+  yLTE?: InputMaybe<Scalars['u32']['input']>;
+  yNEQ?: InputMaybe<Scalars['u32']['input']>;
+};
+
 export type GetEntitiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | { __typename: 'Game', game_id?: any | null, over?: any | null, seed?: any | null } | { __typename: 'Map', game_id?: any | null, length?: any | null, width?: any | null } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Tile', game_id?: any | null, index?: any | null, _type?: any | null, x?: any | null, y?: any | null } | null> | null } | null } | null> | null } | null };
+export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | { __typename: 'Game', game_id?: any | null, over?: any | null, seed?: any | null } | { __typename: 'Map', game_id?: any | null, length?: any | null, width?: any | null } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Tile', game_id?: any | null, index?: any | null, _type?: any | null, x?: any | null, y?: any | null } | { __typename: 'Wind', game_id?: any | null, x?: any | null, y?: any | null, wx?: any | null, wy?: any | null, force?: any | null } | null> | null } | null } | null> | null } | null };
 
 
 export const GetEntitiesDocument = gql`
@@ -663,6 +758,14 @@ export const GetEntitiesDocument = gql`
             _type
             x
             y
+          }
+          ... on Wind {
+            game_id
+            x
+            y
+            wx
+            wy
+            force
           }
         }
       }

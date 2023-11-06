@@ -35,45 +35,45 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
   // const newGrid = grid;
   const newGrid = [
     [
-      { x: -2, y: 0, layer: 'base', type: 'high_water' },
-      { x: -2, y: 1, layer: 'base', type: 'high_water' },
-      { x: -2, y: 2, layer: 'base', type: 'high_water' },
-      { x: -2, y: 3, layer: 'base', type: 'high_water' },
-      { x: -2, y: 4, layer: 'base', type: 'high_water' },
-      { x: -2, y: 5, layer: 'base', type: 'high_water' },
-      { x: -2, y: 6, layer: 'base', type: 'high_water' },
-      { x: -2, y: 7, layer: 'base', type: 'high_water' },
+      { x: -2, y: 0, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 1, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 2, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 3, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 4, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 5, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 6, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -2, y: 7, layer: 'base', type: 'high_water', wind_speed: 0 },
     ],
     [
-      { x: -1, y: 0, layer: 'base', type: 'high_water' },
-      { x: -1, y: 1, layer: 'base', type: 'high_water' },
-      { x: -1, y: 2, layer: 'base', type: 'high_water' },
-      { x: -1, y: 3, layer: 'base', type: 'high_water' },
-      { x: -1, y: 4, layer: 'base', type: 'high_water' },
-      { x: -1, y: 5, layer: 'base', type: 'high_water' },
-      { x: -1, y: 6, layer: 'base', type: 'high_water' },
-      { x: -1, y: 7, layer: 'base', type: 'high_water' },
+      { x: -1, y: 0, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 1, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 2, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 3, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 4, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 5, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 6, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: -1, y: 7, layer: 'base', type: 'high_water', wind_speed: 0 },
     ],
     ...grid,
     [
-      { x: 8, y: 0, layer: 'base', type: 'high_water' },
-      { x: 8, y: 1, layer: 'base', type: 'high_water' },
-      { x: 8, y: 2, layer: 'base', type: 'high_water' },
-      { x: 8, y: 3, layer: 'base', type: 'high_water' },
-      { x: 8, y: 4, layer: 'base', type: 'high_water' },
-      { x: 8, y: 5, layer: 'base', type: 'high_water' },
-      { x: 8, y: 6, layer: 'base', type: 'high_water' },
-      { x: 8, y: 7, layer: 'base', type: 'high_water' },
+      { x: 8, y: 0, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 1, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 2, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 3, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 4, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 5, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 6, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 8, y: 7, layer: 'base', type: 'high_water', wind_speed: 0 },
     ],
     [
-      { x: 9, y: 0, layer: 'base', type: 'high_water' },
-      { x: 9, y: 1, layer: 'base', type: 'high_water' },
-      { x: 9, y: 2, layer: 'base', type: 'high_water' },
-      { x: 9, y: 3, layer: 'base', type: 'high_water' },
-      { x: 9, y: 4, layer: 'base', type: 'high_water' },
-      { x: 9, y: 5, layer: 'base', type: 'high_water' },
-      { x: 9, y: 6, layer: 'base', type: 'high_water' },
-      { x: 9, y: 7, layer: 'base', type: 'high_water' },
+      { x: 9, y: 0, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 1, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 2, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 3, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 4, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 5, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 6, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: 9, y: 7, layer: 'base', type: 'high_water', wind_speed: 0 },
     ],
   ];
 
@@ -81,11 +81,11 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
 
   return newGrid.map((row: any, i) => {
     const newRow = [
-      { x: i - 2, y: -2, layer: 'base', type: 'high_water' },
-      { x: i - 2, y: -1, layer: 'base', type: 'high_water' },
+      { x: i - 2, y: -2, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: i - 2, y: -1, layer: 'base', type: 'high_water', wind_speed: 0 },
       ...row,
-      { x: i - 2, y: 8, layer: 'base', type: 'high_water' },
-      { x: i - 2, y: 9, layer: 'base', type: 'high_water' },
+      { x: i - 2, y: 8, layer: 'base', type: 'high_water', wind_speed: 0 },
+      { x: i - 2, y: 9, layer: 'base', type: 'high_water', wind_speed: 0 },
     ];
     return newRow.map((tile: any) => {
       // map.winds.foreach ((wind) => {
@@ -117,7 +117,12 @@ const Map: React.FC<MapProps> = ({ hoveredTile }) => {
             y={screenPos.y + H_OFFSET - adjustment}
           />
           {/* <Graphics draw={draw} /> */}
-          <WindArrow x={screenPos.x + WIDTH / 2} y={screenPos.y + H_OFFSET - adjustment} force={tile.wind_speed} direction={1} />
+          <WindArrow 
+            x={screenPos.x + WIDTH / 2} 
+            y={screenPos.y + H_OFFSET - adjustment} 
+            force={tile.wind_speed} 
+            direction={tile.wind_direction !== undefined ? tile.wind_direction : {x:0, y:0}} 
+          />
         </>
                 
       );

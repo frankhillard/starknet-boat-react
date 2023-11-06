@@ -88,6 +88,24 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
+    Wind: (() => {
+      const name = 'Wind';
+      return defineComponent(
+        world,
+        {
+          x: RecsType.Number,
+          y: RecsType.Number,
+          wx: RecsType.Number,
+          wy: RecsType.Number,
+          force: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u32", "u32", "u32", "u32", "u32"],
+          },
+        }
+      );
+    })(),
   };
 }

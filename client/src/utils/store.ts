@@ -41,13 +41,13 @@ export const useElementStore = create<State>((set) => ({
   map: { size: 0, holes: [] },
   add_hole: (x: number, y: number) =>
     set((state) => ({
-      map: { size: state.map.size, holes: [...state.map.holes, { x, y }] },
+      map: { size: state.map.size, holes: [...state.map.holes, { x, y }], winds: state.map.winds },
     })),
   reset_holes: () =>
     set((state) => ({
-      map: { size: state.map.size, holes: [] },
+      map: { size: state.map.size, holes: [], winds: [] },
     })),
-  set_size: (size: number) => set((state) => ({ map: { size, holes: state.map.holes } })),
+  set_size: (size: number) => set((state) => ({ map: { size, holes: state.map.holes, winds: state.map.winds } })),
   set_ip: (ip: number) => set(() => ({ ip })),
   set_wind: (x: number, y: number, force: number, wx: number, wy: number) =>
     set((state) => ({

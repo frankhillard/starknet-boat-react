@@ -226,6 +226,7 @@ export async function executeEvents(
     // console.log('tileEvents', tileEvents);
     for (const e of tileEvents) {
       if (e._type === TileType.Ground) {
+        console.log("[executeEvents] ADD HOLE", e.x, e.y);
         add_hole(e.x, e.y);
         Number_of_holes++;
       }
@@ -235,8 +236,8 @@ export async function executeEvents(
     const windEvents = events.filter((e): e is WindEvent & ComponentData => e.type === 'Wind');
     // console.log('windEvents', windEvents);
     for (const e of windEvents) {
-        console.log("[executeEvents] SET WIND", e.x, e.y);
-        set_wind(e.x, e.y, 6, e.wx, e.wy);
+        console.log("[executeEvents] SET WIND", e.x, e.y, e.force, e.wx, e.wy);
+        set_wind(e.x, e.y, e.force, e.wx, e.wy);
         setComponent(e.component, e.entityIndex, e.componentValues);
     }
 
@@ -387,12 +388,12 @@ export async function executeEvents(
   function handleWindEvent(
     keys: bigint[],
     values: string[]
-  ): Omit<TileEvent, 'component' | 'componentValues' | 'entityIndex'> {
+  ): Omit<WindEvent, 'component' | 'componentValues' | 'entityIndex'> {
     console.log("handleWindEvent", values);
     const [game_id, x, y] = keys.map((k) => Number(k));
-    const [wx, wy] = values.map((v) => Number(v));
+    const [wx, wy, force] = values.map((v) => Number(v));
     console.log(
-      `[Wind: KEYS: (game_id: ${game_id},x: ${x}, y: ${y}) - VALUES: (wx: ${wx}, wy: ${wy})]`
+      `[Wind: KEYS: (game_id: ${game_id},x: ${x}, y: ${y}) - VALUES: (wx: ${wx}, wy: ${wy}, force:${force})]`
     );
     return {
       type: 'Wind',
@@ -400,7 +401,8 @@ export async function executeEvents(
       x,
       y, 
       wx,
-      wy
+      wy, 
+      force
     };
   }
 

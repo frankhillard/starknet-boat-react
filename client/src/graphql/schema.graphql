@@ -32,7 +32,14 @@ query getEntities {
             x
             y
           }
-
+          ... on Wind {
+            game_id
+            x
+            y
+            wx
+            wy
+            force
+          }
         }
       }
     }

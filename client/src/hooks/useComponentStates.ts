@@ -30,7 +30,7 @@ const createBoat = (type: string, health?: number, mob_position?: Coordinate, mo
 export const useComponentStates = () => {
   const {
     setup: {
-      components: { Game, Boat, Tile, Map },
+      components: { Game, Boat, Tile, Map, Wind },
     },
     account: { create, list, select, account, isDeploying }
   } = useDojo();
@@ -63,12 +63,25 @@ export const useComponentStates = () => {
   // console.log('[useComponentSates] entityId2', entityId2);
 
   const map = useComponentValue(Map, entityId2);
-  useEffect(() => {
-    // console.log('[useComponentSates] map (use effect)', map);
-    if (map !== undefined)
-      set_size(map.length);
-  }, [map]);
+  // useEffect(() => {
+  //   // console.log('[useComponentSates] map (use effect)', map);
+  //   if (map !== undefined)
+  //     set_size(map.length);
+  // }, [map]);
   // console.log('[useComponentSates] map', map);
+
+// ===================================================================================================================
+  // Tile
+
+  // const entityId3 = "0x0" as EntityIndex; //game?.game_id as EntityIndex;
+  // // console.log('[useComponentSates] entityId2', entityId2);
+
+  // const tile = useComponentValue(Tile, entityId3);
+  // useEffect(() => {
+  //   // console.log('[useComponentSates] map (use effect)', map);
+  //   if (tile !== undefined)
+  //     set_size(map.length);
+  // }, [tile]);
 
   // ===================================================================================================================
   // BOAT

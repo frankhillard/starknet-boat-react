@@ -71,7 +71,10 @@ export const generateGrid = (map: Map): GridElement[][] => {
   map.holes.forEach((hole) => (generated[hole.x][hole.y].type = 'ground'));
 
   if (map.winds && map.winds.length > 0)
-    map.winds.forEach((wind) => (generated[wind.x][wind.y].wind_speed = wind.force));
+    map.winds.forEach((wind) => {
+      generated[wind.x][wind.y].wind_speed = wind.force;
+      generated[wind.x][wind.y].wind_direction = wind.direction;
+    });
 
 
   return generated;

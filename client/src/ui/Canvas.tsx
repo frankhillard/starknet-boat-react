@@ -123,10 +123,10 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     useEffect(() => {
       if (mapState.spawn === 0) {
         // spawn(account, ip, add_hole, set_size, reset_holes, set_hit_mob, set_turn);
-        
+        console.log("AUTO SPAWN !!")
         spawn(account);
       }
-    }, [mapState.spawn]);
+    }, [mapState.spawn]); 
   
 
     useEffect(() => {
