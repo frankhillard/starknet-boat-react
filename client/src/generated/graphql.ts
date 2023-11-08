@@ -28,6 +28,7 @@ export type Scalars = {
 
 export type Boat = {
   __typename?: 'Boat';
+  direction?: Maybe<Vec2>;
   entity?: Maybe<Entity>;
   player?: Maybe<Scalars['ContractAddress']['output']>;
   vec?: Maybe<Vec2>;
@@ -51,6 +52,7 @@ export type BoatOrder = {
 };
 
 export enum BoatOrderField {
+  Direction = 'DIRECTION',
   Player = 'PLAYER',
   Vec = 'VEC'
 }
@@ -632,8 +634,8 @@ export type TileWhereInput = {
 
 export type Vec2 = {
   __typename?: 'Vec2';
-  x?: Maybe<Scalars['u32']['output']>;
-  y?: Maybe<Scalars['u32']['output']>;
+  x?: Maybe<Scalars['felt252']['output']>;
+  y?: Maybe<Scalars['felt252']['output']>;
 };
 
 export type Wind = {
@@ -721,7 +723,7 @@ export type WindWhereInput = {
 export type GetEntitiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | { __typename: 'Game', game_id?: any | null, over?: any | null, seed?: any | null } | { __typename: 'Map', game_id?: any | null, length?: any | null, width?: any | null } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Tile', game_id?: any | null, index?: any | null, _type?: any | null, x?: any | null, y?: any | null } | { __typename: 'Wind', game_id?: any | null, x?: any | null, y?: any | null, wx?: any | null, wy?: any | null, force?: any | null } | null> | null } | null } | null> | null } | null };
+export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null, direction?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | { __typename: 'Game', game_id?: any | null, over?: any | null, seed?: any | null } | { __typename: 'Map', game_id?: any | null, length?: any | null, width?: any | null } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Tile', game_id?: any | null, index?: any | null, _type?: any | null, x?: any | null, y?: any | null } | { __typename: 'Wind', game_id?: any | null, x?: any | null, y?: any | null, wx?: any | null, wy?: any | null, force?: any | null } | null> | null } | null } | null> | null } | null };
 
 
 export const GetEntitiesDocument = gql`
@@ -738,6 +740,10 @@ export const GetEntitiesDocument = gql`
           }
           ... on Boat {
             vec {
+              x
+              y
+            }
+            direction {
               x
               y
             }

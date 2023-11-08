@@ -37,16 +37,16 @@ git submodule update --init --recursive
 1. **Terminal 1 - Katana**:
 
 ```console
-cd dojo-starter && katana --disable-fee
+cd contracts && katana --disable-fee
 ```
 
 2. **Terminal 2 - Contracts**:
 
 ```console
-cd dojo-starter && sozo build && sozo migrate
+cd contracts && sozo build && sozo migrate
 
 // Basic Auth - This will allow burner Accounts to interact with the contracts
-sh ./dojo-starter/scripts/default_auth.sh
+sh ./contracts/scripts/default_auth.sh
 ```
 
 3. **Terminal 3 - Client**:
@@ -63,10 +63,10 @@ cd client && bun install && bun dev
 
 4. **Terminal 4 - Torii**:
 
-Uncomment the 'world_address' parameter in `dojo-starter/Scarb.toml` then:
+Uncomment the 'world_address' parameter in `contracts/Scarb.toml` then:
 
 ```console
-cd dojo-starter && torii
+cd contracts && torii --world {world_address}
 ```
 
 Upon completion, launch your browser and navigate to http://localhost:5173/. You'll be greeted by the running example!

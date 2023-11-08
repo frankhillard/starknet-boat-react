@@ -93,12 +93,12 @@ export const useComponentStates = () => {
     // getEntityIdFromKeys([game?.game_id ? BigInt(game?.game_id) : BigInt(0), BigInt(TileType.Boat)])
   );
 
-  useEffect(() => {
-    // console.log('[useComponentSates] boat (use effect)', boat);
-    // if (boat !== undefined)
-    //   set_position(boat?.vec);
-  }, [boat]);
-
+  // useEffect(() => {
+  //   console.log('[useComponentSates] boat (use effect)', boat);
+  //   // if (boat !== undefined)
+  //   //   set_position(boat?.vec);
+  // }, [boat]);
+  console.log('[useComponentSates] boat ', boat);
   const boat_position = (boat !== undefined) ? boat.vec : {x: 0, y: 0};
 
   return {

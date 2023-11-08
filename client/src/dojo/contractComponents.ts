@@ -26,14 +26,18 @@ export function defineContractComponents(world: World) {
         world,
         {
           vec: {
-            x: RecsType.Number,
-            y: RecsType.Number
+            x: RecsType.BigInt,
+            y: RecsType.BigInt
+          },
+          direction: {
+            x: RecsType.BigInt,
+            y: RecsType.BigInt
           }
         },
         {
           metadata: {
             name: name,
-            types: ["Vec2"],
+            types: ["Vec2", "Vec2"],
           },
         }
       );

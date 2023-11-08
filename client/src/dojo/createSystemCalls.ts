@@ -10,6 +10,7 @@ import { getEvents } from "@dojoengine/utils";
 import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
 import { Vec2 } from "../generated/graphql";
 import { TileType } from '../hooks/useComponentStates';
+import Boat from "../ui/Boat";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 let Number_of_holes = 0;
@@ -70,35 +71,45 @@ export function createSystemCalls(
         console.log("SPAWWWWN");
         const entityId = signer.address.toString() as EntityIndex;
 
-        const positionId = uuid();
-        Boat.addOverride(positionId, {
-            entity: entityId,
-            value: { x: 10, y: 10 },
-        });
+        // const positionId = uuid();
+        // Boat.addOverride(positionId, {
+        //     entity: entityId,
+        //     value: { x: 10, y: 10 },
+        // });
 
-        const movesId = uuid();
-        Moves.addOverride(movesId, {
-            entity: entityId,
-            value: { remaining: 10 },
-        });
+        // const movesId = uuid();
+        // Moves.addOverride(movesId, {
+        //     entity: entityId,
+        //     value: { remaining: 10 },
+        // });
 
         try {
             const tx = await execute(signer, "actions", 'spawn', []);
-            setComponentsFromEvents(contractComponents,
-                getEvents(
-                    await signer.waitForTransaction(tx.transaction_hash,
-                        { retryInterval: 100 }
-                    )
+            const events = getEvents(
+              await signer.waitForTransaction(tx.transaction_hash,
+                  { retryInterval: 100 }
                 )
             );
+            console.log('spawnevents', events);
+            const transformed_events = await setComponentsFromEvents(contractComponents, events);
+            // setComponentsFromEvents(contractComponents, events);
+            await executeEvents(transformed_events, undefined, undefined);
+
+            // setComponentsFromEvents(contractComponents,
+            //     getEvents(
+            //         await signer.waitForTransaction(tx.transaction_hash,
+            //             { retryInterval: 100 }
+            //         )
+            //     )
+            // );
 
         } catch (e) {
             console.log(e)
-            Boat.removeOverride(positionId);
-            Moves.removeOverride(movesId);
+            // Boat.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
         } finally {
-            Boat.removeOverride(positionId);
-            Moves.removeOverride(movesId);
+            // Boat.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
         }
     };
 
@@ -202,11 +213,13 @@ export async function executeEvents(
     }
   
     const boatEvents = events.filter((e): e is BoatEvent & ComponentData => e.type === 'Boat');
-    // console.log('boatEvents', boatEvents);
+    console.log('boatEvents', boatEvents);
     for (const e of boatEvents) {
       // set_position(e.vec.x, e.vec.y);
-      console.log('[executeEvents] Boat', e.entityIndex, e.componentValues);
+      console.log('[executeEvents] Boat', e.entityIndex, e.componentValues, e);
       setComponent(e.component, e.entityIndex, e.componentValues);
+      // const result = getComponentValue(Boat, e.entityIndex);
+      // console.log('[executeEvents] verify Boat', result);
     }
 
     const mapEvents = events.filter((e): e is MapEvent & ComponentData => e.type === 'Map');
@@ -320,6 +333,7 @@ export async function executeEvents(
     type: 'Boat';
     player: string;
     vec: Vec2;
+    direction: Vec2;
   };
 
   
@@ -329,14 +343,15 @@ export async function executeEvents(
   ): Omit<BoatEvent, 'component' | 'componentValues' | 'entityIndex'> {
     console.log("handleBoatEvent", values);
     const [player] = keys.map((k) => k.toString(16));
-    const [x, y] = values.map((v) => Number(v));
+    const [x, y, dir_x, dir_y] = values.map((v) => BigInt(v));
     console.log(
-      `[Boat: KEYS: (player: ${player}) - VALUES: (x: ${x}, y: ${y} )]`
+      `[Boat: KEYS: (player: ${player}) - VALUES: (x: ${x}, y: ${y}, dir_x: ${dir_x}, dir_y: ${dir_y} )]`
     );
     return {
       type: 'Boat',
       player,
       vec: {x: x, y: y},
+      direction: {x: dir_x, y: dir_y},
     };
   }
 

@@ -1,0 +1,23 @@
+[package]
+cairo-version = "2.2.0"
+name = "dojo_examples"
+version = "0.3.0"
+
+[cairo]
+sierra-replace-ids = true
+
+[dependencies]
+dojo = { git = "https://github.com/dojoengine/dojo", rev = "v0.3.0" }
+cubit = { git = "https://github.com/ametel01/cubit.git", rev = "2ccb2536dffa3f15ebd38b755c1be65fde1eab0c" }
+
+[[target.dojo]]
+
+[tool.dojo]
+initializer_class_hash = "0xbeef"
+
+[tool.dojo.env]
+rpc_url = "http://localhost:5050/"
+# Default account for katana with seed = 0
+account_address = "0x517ececd29116499f4a1b64b094da79ba08dfd54a3edaa316134c41f8160973"
+private_key = "0x1800000000300000180000000000030000000000003006001800006600"
+world_address = "0x1af130f7b9027f3748c1e3b10ca4a82ac836a30ac4f2f84025e83a99a922a0c"
