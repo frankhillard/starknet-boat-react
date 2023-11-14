@@ -53,7 +53,7 @@ export const useComponentStates = () => {
   // console.log('[useComponentSates] game', game);
 
   useEffect(() => {
-    // console.log('[useComponentSates] game (use effect)', game);
+    console.log('[useComponentSates] game (use effect)', game);
   }, [game]);
   
   // ===================================================================================================================
@@ -93,14 +93,23 @@ export const useComponentStates = () => {
     // getEntityIdFromKeys([game?.game_id ? BigInt(game?.game_id) : BigInt(0), BigInt(TileType.Boat)])
   );
 
-  // useEffect(() => {
-  //   console.log('[useComponentSates] boat (use effect)', boat);
-  //   // if (boat !== undefined)
-  //   //   set_position(boat?.vec);
-  // }, [boat]);
-  console.log('[useComponentSates] boat ', boat);
-  const boat_position = (boat !== undefined) ? boat.vec : {x: 0, y: 0};
+  useEffect(() => {
+    console.log('[useComponentSates] boat (use effect)', boat);
+    // if (boat !== undefined)
+    //   set_position(boat?.vec);
+  }, [boat]);
 
+  // console.log('[useComponentSates] boat ', boat);
+  // if (boat !== undefined) {
+  // const tt = boat.position_x / BigInt(Math.pow(2, 64));
+  // console.log("tt", tt);
+  // }
+
+  // translate bigint (felt) to number (float)
+  const boat_position = (boat !== undefined) ? {
+      x: boat.position_x / BigInt(Math.pow(2, 64)), 
+      y: boat.position_y / BigInt(Math.pow(2, 64))} : {x: 0, y: 0};
+  console.log('retrieve boat position', boat_position);
   return {
     game: { id: game?.game_id, over: game?.over, seed: game?.seed },
     map: { level: 0, size: 4, spawn: 0, score: 0, over: 0, name: "toto" },

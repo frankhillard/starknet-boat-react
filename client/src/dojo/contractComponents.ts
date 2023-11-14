@@ -25,19 +25,24 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          vec: {
-            x: RecsType.BigInt,
-            y: RecsType.BigInt
-          },
-          direction: {
-            x: RecsType.BigInt,
-            y: RecsType.BigInt
-          }
+          position_x: RecsType.BigInt,
+          position_y: RecsType.BigInt,
+          dx: RecsType.BigInt,
+          dy: RecsType.BigInt,
+          // vec: {
+          //   x: RecsType.BigInt,
+          //   y: RecsType.BigInt
+          // },
+          // direction: {
+          //   x: RecsType.BigInt,
+          //   y: RecsType.BigInt
+          // }
         },
         {
           metadata: {
             name: name,
-            types: ["Vec2", "Vec2"],
+            types: ["BigInt", "BigInt", "BigInt", "BigInt"],
+            // types: ["Vec2", "Vec2"],
           },
         }
       );

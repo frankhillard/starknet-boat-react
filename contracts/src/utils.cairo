@@ -7,16 +7,16 @@ fn next_position(mut boat: Boat, direction: Direction) -> Boat {
             return boat;
         },
         Direction::Left(()) => {
-            boat.vec.x -= 1;
+            boat.position_x -= 1;
         },
         Direction::Right(()) => {
-            boat.vec.x += 1;
+            boat.position_x += 1;
         },
         Direction::Up(()) => {
-            boat.vec.y -= 1;
+            boat.position_y -= 1;
         },
         Direction::Down(()) => {
-            boat.vec.y += 1;
+            boat.position_y += 1;
         },
     };
 

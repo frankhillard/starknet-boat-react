@@ -37,8 +37,12 @@ impl Vec2Impl of Vec2Trait {
 struct Boat {
     #[key]
     player: ContractAddress,
-    vec: Vec2,
-    direction: Vec2,
+    // vec: Vec2,
+    // direction: Vec2,
+    position_x: felt252,
+    position_y: felt252,
+    dx: felt252,
+    dy: felt252
 }
 
 trait BoatTrait {
@@ -64,16 +68,20 @@ fn compute_angle(v1_x: Fixed, v1_y: Fixed, v2_x: Fixed, v2_y: Fixed) -> Fixed {
 
 impl BoatImpl of BoatTrait {
     fn step(self: Boat, wind_vx: Fixed, wind_vy: Fixed, wind_speed: Fixed) -> Boat {
-        let position_x = FixedTrait::from_felt(self.vec.x);
-        let position_y = FixedTrait::from_felt(self.vec.y);
-        let direction_x = FixedTrait::from_felt(self.direction.x);
-        let direction_y = FixedTrait::from_felt(self.direction.y);
+        let position_x = FixedTrait::from_felt(self.position_x);
+        let position_y = FixedTrait::from_felt(self.position_y);
+        let direction_x = FixedTrait::from_felt(self.dx);
+        let direction_y = FixedTrait::from_felt(self.dy);
 
         if wind_vx == FixedTrait::new_unscaled(0, false) && wind_vy == FixedTrait::new_unscaled(0, false) {
             return Boat {
                 player: self.player,
-                vec: Vec2 { x: position_x.into(), y: position_y.into() },
-                direction: Vec2 { x: direction_x.into(), y: direction_y.into() }
+                // vec: Vec2 { x: position_x.into(), y: position_y.into() },
+                // direction: Vec2 { x: direction_x.into(), y: direction_y.into() }
+                position_x: position_x.into(), 
+                position_y: position_y.into(),
+                dx: direction_x.into(), 
+                dy: direction_y.into()
             };
         } else {
             //inverse wind vector because polar of the boat considers the boat is going against the wind
@@ -95,8 +103,12 @@ impl BoatImpl of BoatTrait {
             let new_y = position_y + delta_y;
             Boat {
                 player: self.player,
-                vec: Vec2 { x: new_x.into(), y: new_y.into() },
-                direction: Vec2 { x: direction_x.into(), y: direction_y.into() }
+                // vec: Vec2 { x: new_x.into(), y: new_y.into() },
+                // direction: Vec2 { x: direction_x.into(), y: direction_y.into() }
+                position_x: new_x.into(), 
+                position_y: new_y.into(),
+                dx: direction_x.into(), 
+                dy: direction_y.into()
             }
         }
       
@@ -151,14 +163,14 @@ mod tests {
         let player = starknet::contract_address_const::<0x0>();
         let boat = Boat { 
             player,
-            vec: Vec2 { 
-                x: FixedTrait::from_unscaled_felt(90).into(), 
-                y: FixedTrait::from_unscaled_felt(90).into() 
-            },
-            direction: Vec2 { 
-                x: FixedTrait::from_unscaled_felt(1).into(), 
-                y: FixedTrait::from_unscaled_felt(3).into() 
-            }
+            // vec: Vec2 { 
+                position_x: FixedTrait::from_unscaled_felt(90).into(), 
+                position_y: FixedTrait::from_unscaled_felt(90).into(), 
+            // },
+            // direction: Vec2 { 
+                dx: FixedTrait::from_unscaled_felt(1).into(), 
+                dy: FixedTrait::from_unscaled_felt(3).into(),
+            // }
         };
         let wind = Wind { 
             game_id: 0,
@@ -172,9 +184,9 @@ mod tests {
 
         // new_position.x.print();
         assert(new_position.player == player, 'player should not change');
-        assert(new_position.vec.x == 1684648798116665289347_u128.into(), 'x should be different'); //91,32499434 or 0x5b5332d43c3896ea83 
-        assert(new_position.vec.y == 1733532461082276577163_u128.into(), 'y should be different'); //93,974983019 or 0x5df9987cb4a9c4bf8b
-        assert(new_position.direction.x == FixedTrait::from_unscaled_felt(1).into(), 'vx should not change');
-        assert(new_position.direction.y == FixedTrait::from_unscaled_felt(3).into(), 'vy should not change');
+        assert(new_position.position_x == 1684648798116665289347_u128.into(), 'x should be different'); //91,32499434 or 0x5b5332d43c3896ea83 
+        assert(new_position.position_y == 1733532461082276577163_u128.into(), 'y should be different'); //93,974983019 or 0x5df9987cb4a9c4bf8b
+        assert(new_position.dx == FixedTrait::from_unscaled_felt(1).into(), 'vx should not change');
+        assert(new_position.dy == FixedTrait::from_unscaled_felt(3).into(), 'vy should not change');
     }
 }

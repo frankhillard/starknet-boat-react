@@ -10,14 +10,10 @@ query getEntities {
             last_direction
           }
           ... on Boat {
-            vec {
-              x
-              y
-            }
-            direction {
-              x
-              y
-            }
+            position_x
+            position_y
+            dx
+            dy
           }
           ... on Game {
             game_id

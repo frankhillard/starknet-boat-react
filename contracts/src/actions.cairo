@@ -173,8 +173,13 @@ use starknet::{ContractAddress, get_caller_address};
                     },
                     Boat {
                         player, 
-                        vec: Vec2 { x: FixedTrait::from_unscaled_felt(90).into(), y: FixedTrait::from_unscaled_felt(90).into() },
-                        direction: Vec2 { x: FixedTrait::from_unscaled_felt(1).into(), y: FixedTrait::from_unscaled_felt(3).into() }
+                        // vec: Vec2 { x: FixedTrait::from_unscaled_felt(90).into(), y: FixedTrait::from_unscaled_felt(90).into() },
+                        // direction: Vec2 { x: FixedTrait::from_unscaled_felt(1).into(), y: FixedTrait::from_unscaled_felt(3).into() }
+                        position_x: FixedTrait::from_unscaled_felt(90).into(), 
+                        position_y: FixedTrait::from_unscaled_felt(90).into(),
+                        dx: FixedTrait::from_unscaled_felt(1).into(), 
+                        dy: FixedTrait::from_unscaled_felt(3).into(),
+
                     },
                 )
             );
@@ -203,8 +208,8 @@ use starknet::{ContractAddress, get_caller_address};
             // Calculate the player's next position based on the provided boat direction and wind.
             // let cur_wind_cell: (u32, u32) = WindTrait::get_wind_cell(boat.vec.x, boat.vec.y);
             let cell_size: Fixed = FixedTrait::from_unscaled_felt(100);
-            let cell_x = FixedTrait::from_felt(boat.vec.x) / cell_size;
-            let cell_y = FixedTrait::from_felt(boat.vec.y) / cell_size;
+            let cell_x = FixedTrait::from_felt(boat.position_x) / cell_size;
+            let cell_y = FixedTrait::from_felt(boat.position_y) / cell_size;
             let cell_x_u32: u32 = FixedTrait::floor(cell_x).try_into().unwrap();
             let cell_y_u32: u32 = FixedTrait::floor(cell_y).try_into().unwrap();
 
@@ -292,11 +297,11 @@ mod tests {
         // Position should not change since no wind has been set (with create entrypoint)
         // check new position x
         let expected_x: felt252 = FixedTrait::new_unscaled(90, false).into();
-        assert(new_boat.vec.x == expected_x, 'boat x is wrong');
+        assert(new_boat.position_x == expected_x, 'boat x is wrong');
 
         // check new position y
         let expected_y: felt252 = FixedTrait::new_unscaled(90, false).into();
-        assert(new_boat.vec.y == expected_y, 'boat y is wrong');
+        assert(new_boat.position_y == expected_y, 'boat y is wrong');
     }
 
     #[test]
@@ -394,11 +399,11 @@ mod tests {
 
         // check new position x
         let expected_x: felt252 = 1684648798116665289347_u128.into(); //91,32499434
-        assert(new_boat.vec.x == expected_x, 'boat x is wrong');
+        assert(new_boat.position_x == expected_x, 'boat x is wrong');
 
         // check new position y
         let expected_y: felt252 = 1733532461082276577163_u128.into(); //93,974983019
-        assert(new_boat.vec.y == expected_y, 'boat y is wrong');
+        assert(new_boat.position_y == expected_y, 'boat y is wrong');
     }
 
 

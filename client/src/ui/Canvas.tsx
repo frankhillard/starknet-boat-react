@@ -14,7 +14,7 @@ import useIP from '../hooks/useIP';
 import { Coordinate, GridElement } from '../type/GridElement';
 
 // import { fetchData } from '../utils/fetchData';
-import { HEIGHT, H_OFFSET, WIDTH, areCoordsEqual, generateGrid, to_grid_coordinate } from '../utils/grid';
+import { HEIGHT, H_OFFSET, WIDTH, areCoordsEqual, generateGrid, to_grid_coordinate, to_screen_coordinate } from '../utils/grid';
 
 // import { getNeighbors } from '../utils/pathfinding';
 import { useElementStore } from '../utils/store';
@@ -145,8 +145,13 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // PIXI.Texture.from(heart).baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     // PIXI.Texture.from(skull).baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     const blurFilter = useMemo(() => new BlurFilter(4), []);
-    // console.log("[Canvas] BOAT", boat);
-    // console.log("[Canvas] BOAT", boat);
+
+    // a tile is considered composed of 100x100 so absolute boat position (90, 90) is represented by position (0.9, 0.9) in the grid
+    // since the centre of tile_0_0 is at absolute position (100, 100), we set an offset of (-1,-1)
+    const boat_position = { x: (Number(boat.position.x) / 100) - 1, y: (Number(boat.position.y) / 100) - 1 };
+    const boat_position_screen = to_screen_coordinate(boat_position);    
+    // console.log("[Canvas] BOAT ", boat_position); //, boat_position_screen);
+
     return (
         <div style={{ position: 'relative' }}>
           {map.size === 0 && <NewGame onClick={generateNewGame} onPseudoChange={setPseudo} />}
@@ -179,13 +184,13 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
                 <Text text={boat?.position?.x} anchor={{ x: 0, y: 0 }} />
                 {/* <Text text={boat.position?.y} anchor={{ x: 5, y: 5 }} /> */}
                 <Map hoveredTile={hoveredTile} />  
-                {boat.position && boat.health !== undefined && (
+                {boat !== undefined && boat.health !== undefined && (
                   <Boat
                     type="classic"
-                    targetPosition={boat.position}
+                    targetPosition={boat_position_screen}
                     isHovered={false} 
                     health={boat.health}
-                    position={boat.position}
+                    position={boat_position_screen}
                   />
                 )}
                 

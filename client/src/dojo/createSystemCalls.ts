@@ -93,7 +93,7 @@ export function createSystemCalls(
             console.log('spawnevents', events);
             const transformed_events = await setComponentsFromEvents(contractComponents, events);
             // setComponentsFromEvents(contractComponents, events);
-            await executeEvents(transformed_events, undefined, undefined);
+            await executeEvents(transformed_events, undefined, undefined, undefined);
 
             // setComponentsFromEvents(contractComponents,
             //     getEvents(
@@ -119,11 +119,11 @@ export function createSystemCalls(
     ) => {
         const entityId = signer.address.toString() as EntityIndex;
         console.log("MOOOOVE");
-        const positionId = uuid();
-        Boat.addOverride(positionId, {
-            entity: entityId,
-            value: updatePositionWithDirection(direction, getComponentValue(Boat, entityId)),
-        });
+        // const positionId = uuid();
+        // Boat.addOverride(positionId, {
+        //     entity: entityId,
+        //     value: updatePositionWithDirection(direction, getComponentValue(Boat, entityId)),
+        // });
 
         const movesId = uuid();
         Moves.addOverride(movesId, {
@@ -145,10 +145,10 @@ export function createSystemCalls(
 
         } catch (e) {
             console.log(e)
-            Boat.removeOverride(positionId);
+            // Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         } finally {
-            Boat.removeOverride(positionId);
+            // Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         }
 
@@ -217,7 +217,11 @@ export async function executeEvents(
     for (const e of boatEvents) {
       // set_position(e.vec.x, e.vec.y);
       console.log('[executeEvents] Boat', e.entityIndex, e.componentValues, e);
-      setComponent(e.component, e.entityIndex, e.componentValues);
+      // console.log('[executeEvents] Boat', {vec: {x: e.vec.x, y: e.vec.y}, direction: {x: e.direction.x, y: e.direction.y} });
+      // setComponent(e.component, e.entityIndex, {vec: {x: e.vec.x, y: e.vec.y}, direction: {x: e.direction.x, y: e.direction.y} });
+      setComponent(e.component, e.entityIndex, {position_x: e.vec.x, position_y: e.vec.y, dx: e.direction.x, dy: e.direction.y });
+      // setComponent(e.component, e.entityIndex, e.componentValues);
+
       // const result = getComponentValue(Boat, e.entityIndex);
       // console.log('[executeEvents] verify Boat', result);
     }
