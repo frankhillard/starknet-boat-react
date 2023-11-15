@@ -130,9 +130,9 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
   
 
     useEffect(() => {
-      if (boat !== undefined) {
-        // console.log("[CANVAS] boat (use efect)", boat);
-      }
+      // if (boat !== undefined) {
+      //   console.log("[CANVAS] boat (use efect)", boat);
+      // }
     }, [boat]);
     // const { knightNeighbors, barbarianNeighbors, bowmanNeighbors, wizardNeighbors } = useGrid(grid);
   
@@ -151,6 +151,8 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     const boat_position = { x: (Number(boat.position.x) / 100) - 1, y: (Number(boat.position.y) / 100) - 1 };
     const boat_position_screen = to_screen_coordinate(boat_position);    
     // console.log("[Canvas] BOAT ", boat_position); //, boat_position_screen);
+    const boat_direction = { x: Number(boat.direction.x), y: Number(boat.direction.y) };
+  // console.log("[Canvas] BOAT ", boat_direction); //, boat_position_screen);
 
     return (
         <div style={{ position: 'relative' }}>
@@ -191,6 +193,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
                     isHovered={false} 
                     health={boat.health}
                     position={boat_position_screen}
+                    direction={boat_direction}
                   />
                 )}
                 

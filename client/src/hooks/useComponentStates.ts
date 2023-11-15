@@ -95,8 +95,14 @@ export const useComponentStates = () => {
 
   useEffect(() => {
     console.log('[useComponentSates] boat (use effect)', boat);
-    // if (boat !== undefined)
-    //   set_position(boat?.vec);
+    if (boat !== undefined) {
+      const boat_position = {
+        x: boat.position_x / BigInt(Math.pow(2, 64)), 
+        y: boat.position_y / BigInt(Math.pow(2, 64))
+      };
+      console.log('retrieve boat position (use effect)', boat_position);
+    }
+      // set_position(boat?.vec);
   }, [boat]);
 
   // console.log('[useComponentSates] boat ', boat);
@@ -109,11 +115,16 @@ export const useComponentStates = () => {
   const boat_position = (boat !== undefined) ? {
       x: boat.position_x / BigInt(Math.pow(2, 64)), 
       y: boat.position_y / BigInt(Math.pow(2, 64))} : {x: 0, y: 0};
-  console.log('retrieve boat position', boat_position);
+  const boat_direction = (boat !== undefined) ? {
+        x: boat.dx / BigInt(Math.pow(2, 64)), 
+        y: boat.dy / BigInt(Math.pow(2, 64))} : {x: 0, y: 1};
+  
+
+  // console.log('retrieve boat position', boat_position);
   return {
     game: { id: game?.game_id, over: game?.over, seed: game?.seed },
     map: { level: 0, size: 4, spawn: 0, score: 0, over: 0, name: "toto" },
     // map: { level: map?.level, size: map?.size, spawn: map?.spawn, score: map?.score, over: map?.over, name: map?.name },
-    boat: createBoat('classic', 1000, boat_position),
+    boat: createBoat('classic', 1000, boat_position, boat_direction),
   };
 };
