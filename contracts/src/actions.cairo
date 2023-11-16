@@ -9,13 +9,14 @@ trait IActions<TContractState> {
     fn create(self: @TContractState, player_id: felt252, seed: felt252, name: felt252);
     fn spawn(self: @TContractState);
     fn move(self: @TContractState, direction: Direction);
+    fn turn(self: @TContractState, angle: u16);
 }
 
 // dojo decorator
 #[dojo::contract]
 mod actions {
     use core::option::OptionTrait;
-use starknet::{ContractAddress, get_caller_address};
+    use starknet::{ContractAddress, get_caller_address};
     use dojo_examples::models::boat::{Boat, BoatTrait, Vec2};
     use dojo_examples::models::moves::{Moves, Direction};
     use dojo_examples::models::game::{Game, GameTrait};
@@ -33,6 +34,7 @@ use starknet::{ContractAddress, get_caller_address};
     enum Event {
         Moved: Moved,
         Created: Created,
+        Turn: Turn,
     }
 
     // declaring custom event struct
@@ -48,6 +50,12 @@ use starknet::{ContractAddress, get_caller_address};
         game_id: u32,
         over: bool,
         seed: felt252
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Turn {
+        player: ContractAddress,
+        direction: Vec2
     }
 
     // impl: implement functions specified in trait
@@ -229,6 +237,29 @@ use starknet::{ContractAddress, get_caller_address};
             // Emit an event to the world to notify about the player's move.
             emit!(world, Moved { player, direction });
         }
+
+        fn turn(self: @ContractState, angle: u16) {
+            // Access the world dispatcher for reading.
+            let world = self.world_dispatcher.read();
+
+            // Get the address of the current caller, possibly the player's address.
+            let player = get_caller_address();
+
+            let game = get!(world, player, Game);
+            assert(game.game_id == 0, 'game_id is wrong');
+            
+            // Retrieve the player's current position and moves data from the world.
+            let mut boat = get!(world, player, Boat);
+
+            // Calculate the player's next direction vector based on the provided angle and current direction.
+            let next = BoatTrait::turn(boat, angle);
+            let direction: Vec2 = Vec2 { x: next.dx, y: next.dy };
+            // Update the world state with the boat direction.
+            set!(world, (next));
+
+            // Emit an event to the world to notify about the player's move.
+            emit!(world, Turn { player, direction });
+        }
     }
 }
 
@@ -406,5 +437,128 @@ mod tests {
         assert(new_boat.position_y == expected_y, 'boat y is wrong');
     }
 
+    #[test]
+    #[available_gas(300000000)]
+    fn test_create_turn_45() {
+        // caller
+        let caller = starknet::contract_address_const::<0x0>();
+
+        // models
+        let mut models = array![boat::TEST_CLASS_HASH, moves::TEST_CLASS_HASH, game::TEST_CLASS_HASH, map::TEST_CLASS_HASH];
+
+        // deploy world with models
+        let world = spawn_test_world(models);
+
+        // deploy systems contract
+        let contract_address = world
+            .deploy_contract('salt', actions::TEST_CLASS_HASH.try_into().unwrap());
+        let actions_system = IActionsDispatcher { contract_address };
+
+        let player: felt252 = 'player_id'.into();
+        let seed: felt252 = 1000.into();
+        
+        // call spawn()
+        actions_system.create(player, seed, 'name');
+
+        let game = get!(world, player, Game);
+
+        // check moves
+        assert(game.game_id == 0, 'game_id is wrong');
+
+        // call spawn()
+        actions_system.spawn();
+
+        // call move with direction right
+        actions_system.turn(45_u16);
+
+        // get new_position
+        let new_boat = get!(world, caller, Boat);
+
+        // check new direction x
+        // [1 3] * [cos(45) -sin(45)] = [1 3] * [sqrt(2)/2 -sqrt(2)/2] = -2 * sqrt(2)/2
+        let halfsqrt2 = FixedTrait::new(13043817825332782214_u128, false);
+        let expected_x: Fixed = halfsqrt2 * FixedTrait::new_unscaled(2_u128, true);
+        let cdx: Fixed = FixedTrait::from_felt(new_boat.dx);
+        let diff = cdx - expected_x;
+        // almost the same at a precision of 5/2^64 
+        assert(diff.abs() < FixedTrait::from_felt('0x5'), 'boat x is wrong');
+        // assert(new_boat.dx == expected_x_felt, 'boat x is wrong');
+
+        // check new direction y
+        // [1 3] * [sin(45) cos(45)] = [1 3] * [sqrt(2)/2 0sqrt(2)/2] = 4 * sqrt(2)/2
+        // let expected_y: felt252 = 52175271301331128858_u128.into(); 
+        let expected_y: Fixed = halfsqrt2 * FixedTrait::new_unscaled(4_u128, false);
+        let cdy: Fixed = FixedTrait::from_felt(new_boat.dy);
+        let diff = cdy - expected_y;
+        assert(diff.abs() < FixedTrait::from_felt('0x5'), 'boat y is wrong');
+        // assert(new_boat.dy == expected_y.into(), 'boat y is wrong');
+    }
+
+    #[test]
+    #[available_gas(300000000)]
+    fn test_create_turn_90() {
+        // caller
+        let caller = starknet::contract_address_const::<0x0>();
+
+        // models
+        let mut models = array![boat::TEST_CLASS_HASH, moves::TEST_CLASS_HASH, game::TEST_CLASS_HASH, map::TEST_CLASS_HASH];
+
+        // deploy world with models
+        let world = spawn_test_world(models);
+
+        // deploy systems contract
+        let contract_address = world
+            .deploy_contract('salt', actions::TEST_CLASS_HASH.try_into().unwrap());
+        let actions_system = IActionsDispatcher { contract_address };
+
+        let player: felt252 = 'player_id'.into();
+        let seed: felt252 = 1000.into();
+        
+        // call spawn()
+        actions_system.create(player, seed, 'name');
+
+        let game = get!(world, player, Game);
+
+        // check moves
+        assert(game.game_id == 0, 'game_id is wrong');
+
+        // call spawn()
+        actions_system.spawn();
+
+        // call move with direction right
+        actions_system.turn(90_u16);
+
+        // get new_position
+        let new_boat = get!(world, caller, Boat);
+
+        // check new direction x
+        // [1 3] * [cos(90) -sin(90)] = [1 3] * [0 -1] = -3
+        // let halfsqrt2 = FixedTrait::new(13043817825332782214_u128, false);
+        let expected_x: Fixed = FixedTrait::new_unscaled(3_u128, true);
+        // let expected_x_felt : felt252 = expected_x.into();
+        // 'expected_x_felt'.print();
+        // expected_x_felt.print();
+        // let mone : felt252 = -1;
+        // // 'mone'.print();
+        // // mone.print();
+        // let result = new_boat.dx;// * -1; // * mone;
+        // 'result'.print();
+        // result.print();
+
+        let cdx: Fixed = FixedTrait::from_felt(new_boat.dx);
+        let diff = cdx - expected_x;
+        // almost the same at a precision of 5/2^64 
+        assert(diff.abs() < FixedTrait::from_felt('0x5'), 'boat x is wrong');
+        // assert(new_boat.dx == expected_x_felt, 'boat x is wrong');
+
+        // check new direction y
+        // [1 3] * [sin(90) cos(90)] = [1 3] * [1 0] = 1
+        // let expected_y: felt252 = 52175271301331128858_u128.into(); 
+        let expected_y: Fixed = FixedTrait::new_unscaled(1_u128, false);
+        let cdy: Fixed = FixedTrait::from_felt(new_boat.dy);
+        let diff = cdy - expected_y;
+        assert(diff.abs() < FixedTrait::from_felt('0x5'), 'boat y is wrong');
+        // assert(new_boat.dy == expected_y.into(), 'boat y is wrong');
+    }
 
 }

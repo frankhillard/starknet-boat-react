@@ -6,7 +6,7 @@ use dojo::database::schema::{
     Enum, Member, Ty, Struct, SchemaIntrospection, serialize_member, serialize_member_type
 };
 use cubit::f128::types::fixed::{Fixed, FixedTrait};
-use cubit::f128::math::trig::PI_u128;
+use cubit::f128::math::trig::{HALF_PI_u128, PI_u128};
 use dojo_examples::models::polar::{PolarTrait};
 
 #[derive(Copy, Drop, Serde, Print, Introspect)]
@@ -48,6 +48,7 @@ struct Boat {
 trait BoatTrait {
     // fn is_zero(self: Vec2) -> bool;
     fn step(self: Boat, wind_vx: Fixed, wind_vy: Fixed, wind_speed: Fixed) -> Boat;
+    fn turn(self: Boat, angle: u16) -> Boat;  // angle in [0, 360]
 }
 
 fn compute_angle(v1_x: Fixed, v1_y: Fixed, v2_x: Fixed, v2_y: Fixed) -> Fixed {
@@ -114,15 +115,33 @@ impl BoatImpl of BoatTrait {
       
     }
 
-    // fn change_direction(self: Position, vx: Fixed, vy: Fixed) -> Position {
-    //     Position {
-    //         player: self.player,
-    //         x: self.x,
-    //         y: self.y,
-    //         vx: vx,
-    //         vy: vy
-    //     }
-    // }
+    fn turn(self: Boat, angle: u16) -> Boat {
+        if angle == 0_u16 || angle > 360_u16 {
+            return self;
+        } else {
+            let angle_felt: felt252 = angle.into();
+            let a = FixedTrait::new(PI_u128, false) * FixedTrait::from_unscaled_felt(angle_felt) /  FixedTrait::new_unscaled(180, false);
+            let direction_x = FixedTrait::from_felt(self.dx);
+            let direction_y = FixedTrait::from_felt(self.dy);
+
+            // Apply rotation matrix [
+            //  cos -sin 
+            //  sin cos
+            // ]
+            let new_x = direction_x * FixedTrait::cos(a) - direction_y * FixedTrait::sin(a);
+            let new_y = direction_x * FixedTrait::sin(a) + direction_y * FixedTrait::cos(a);
+
+            return Boat {
+                player: self.player,
+                // vec: Vec2 { x: position_x.into(), y: position_y.into() },
+                // direction: Vec2 { x: direction_x.into(), y: direction_y.into() }
+                position_x: self.position_x, 
+                position_y: self.position_y,
+                dx: new_x.into(), 
+                dy: new_y.into()
+            };
+        }
+    }
 
 }
 
