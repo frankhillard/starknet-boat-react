@@ -160,7 +160,7 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
             <Stage
             width={WIDTH}
             height={HEIGHT}
-            options={{ backgroundColor: 'goldenrod' }} //'#242424' }}
+            options={{ backgroundColor: 'steelblue' }} //'#242424' }}
             onPointerMove={(e) => {
                 const gridPos = to_grid_coordinate({
                 x: e.nativeEvent.offsetX - WIDTH / 2,
