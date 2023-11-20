@@ -109,5 +109,8 @@ Uncomment the 'world_address' parameter in `contracts/Scarb.toml` then:
 cd contracts && torii --world {world_address}
 ```
 
-Upon completion, launch your browser and navigate to http://localhost:5173/. You'll be greeted by the running example!
+5. **Game interface**:
+Launch your browser and navigate to http://localhost:5173/. 
 
+6. **for debug**:
+Once torii is running , one can check the SQL-lite database via a graphQL interface accessible at http://0.0.0.0:8080/graphql
