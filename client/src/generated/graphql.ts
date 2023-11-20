@@ -28,18 +28,12 @@ export type Scalars = {
 
 export type Boat = {
   __typename?: 'Boat';
-<<<<<<< HEAD
   dx?: Maybe<Scalars['felt252']['output']>;
   dy?: Maybe<Scalars['felt252']['output']>;
   entity?: Maybe<Entity>;
   player?: Maybe<Scalars['ContractAddress']['output']>;
   position_x?: Maybe<Scalars['felt252']['output']>;
   position_y?: Maybe<Scalars['felt252']['output']>;
-=======
-  entity?: Maybe<Entity>;
-  player?: Maybe<Scalars['ContractAddress']['output']>;
-  vec?: Maybe<Vec2>;
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
 };
 
 export type BoatConnection = {
@@ -60,7 +54,6 @@ export type BoatOrder = {
 };
 
 export enum BoatOrderField {
-<<<<<<< HEAD
   Dx = 'DX',
   Dy = 'DY',
   Player = 'PLAYER',
@@ -83,13 +76,6 @@ export type BoatWhereInput = {
   dyLT?: InputMaybe<Scalars['felt252']['input']>;
   dyLTE?: InputMaybe<Scalars['felt252']['input']>;
   dyNEQ?: InputMaybe<Scalars['felt252']['input']>;
-=======
-  Player = 'PLAYER',
-  Vec = 'VEC'
-}
-
-export type BoatWhereInput = {
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
   player?: InputMaybe<Scalars['ContractAddress']['input']>;
   playerEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
   playerGT?: InputMaybe<Scalars['ContractAddress']['input']>;
@@ -97,7 +83,6 @@ export type BoatWhereInput = {
   playerLT?: InputMaybe<Scalars['ContractAddress']['input']>;
   playerLTE?: InputMaybe<Scalars['ContractAddress']['input']>;
   playerNEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
-<<<<<<< HEAD
   position_x?: InputMaybe<Scalars['felt252']['input']>;
   position_xEQ?: InputMaybe<Scalars['felt252']['input']>;
   position_xGT?: InputMaybe<Scalars['felt252']['input']>;
@@ -112,8 +97,6 @@ export type BoatWhereInput = {
   position_yLT?: InputMaybe<Scalars['felt252']['input']>;
   position_yLTE?: InputMaybe<Scalars['felt252']['input']>;
   position_yNEQ?: InputMaybe<Scalars['felt252']['input']>;
-=======
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
 };
 
 export type Entity = {
@@ -620,8 +603,6 @@ export type Tile = {
   entity?: Maybe<Entity>;
   game_id?: Maybe<Scalars['u32']['output']>;
   index?: Maybe<Scalars['u32']['output']>;
-<<<<<<< HEAD
-=======
   x?: Maybe<Scalars['u32']['output']>;
   y?: Maybe<Scalars['u32']['output']>;
 };
@@ -683,73 +664,6 @@ export type TileWhereInput = {
   yNEQ?: InputMaybe<Scalars['u32']['input']>;
 };
 
-export type Vec2 = {
-  __typename?: 'Vec2';
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
-  x?: Maybe<Scalars['u32']['output']>;
-  y?: Maybe<Scalars['u32']['output']>;
-};
-
-<<<<<<< HEAD
-export type TileConnection = {
-  __typename?: 'TileConnection';
-  edges?: Maybe<Array<Maybe<TileEdge>>>;
-  total_count: Scalars['Int']['output'];
-};
-
-export type TileEdge = {
-  __typename?: 'TileEdge';
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  node?: Maybe<Tile>;
-};
-
-export type TileOrder = {
-  direction: OrderDirection;
-  field: TileOrderField;
-};
-
-export enum TileOrderField {
-  GameId = 'GAME_ID',
-  Index = 'INDEX',
-  X = 'X',
-  Y = 'Y',
-  Type = '_TYPE'
-}
-
-export type TileWhereInput = {
-  _type?: InputMaybe<Scalars['Enum']['input']>;
-  game_id?: InputMaybe<Scalars['u32']['input']>;
-  game_idEQ?: InputMaybe<Scalars['u32']['input']>;
-  game_idGT?: InputMaybe<Scalars['u32']['input']>;
-  game_idGTE?: InputMaybe<Scalars['u32']['input']>;
-  game_idLT?: InputMaybe<Scalars['u32']['input']>;
-  game_idLTE?: InputMaybe<Scalars['u32']['input']>;
-  game_idNEQ?: InputMaybe<Scalars['u32']['input']>;
-  index?: InputMaybe<Scalars['u32']['input']>;
-  indexEQ?: InputMaybe<Scalars['u32']['input']>;
-  indexGT?: InputMaybe<Scalars['u32']['input']>;
-  indexGTE?: InputMaybe<Scalars['u32']['input']>;
-  indexLT?: InputMaybe<Scalars['u32']['input']>;
-  indexLTE?: InputMaybe<Scalars['u32']['input']>;
-  indexNEQ?: InputMaybe<Scalars['u32']['input']>;
-  x?: InputMaybe<Scalars['u32']['input']>;
-  xEQ?: InputMaybe<Scalars['u32']['input']>;
-  xGT?: InputMaybe<Scalars['u32']['input']>;
-  xGTE?: InputMaybe<Scalars['u32']['input']>;
-  xLT?: InputMaybe<Scalars['u32']['input']>;
-  xLTE?: InputMaybe<Scalars['u32']['input']>;
-  xNEQ?: InputMaybe<Scalars['u32']['input']>;
-  y?: InputMaybe<Scalars['u32']['input']>;
-  yEQ?: InputMaybe<Scalars['u32']['input']>;
-  yGT?: InputMaybe<Scalars['u32']['input']>;
-  yGTE?: InputMaybe<Scalars['u32']['input']>;
-  yLT?: InputMaybe<Scalars['u32']['input']>;
-  yLTE?: InputMaybe<Scalars['u32']['input']>;
-  yNEQ?: InputMaybe<Scalars['u32']['input']>;
-};
-
-=======
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
 export type Wind = {
   __typename?: 'Wind';
   entity?: Maybe<Entity>;
@@ -835,11 +749,7 @@ export type WindWhereInput = {
 export type GetEntitiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-<<<<<<< HEAD
 export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', position_x?: any | null, position_y?: any | null, dx?: any | null, dy?: any | null } | { __typename: 'Game', game_id?: any | null, over?: any | null, seed?: any | null } | { __typename: 'Map', game_id?: any | null, length?: any | null, width?: any | null } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Tile', game_id?: any | null, index?: any | null, _type?: any | null, x?: any | null, y?: any | null } | { __typename: 'Wind', game_id?: any | null, x?: any | null, y?: any | null, wx?: any | null, wy?: any | null, force?: any | null } | null> | null } | null } | null> | null } | null };
-=======
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Boat', vec?: { __typename?: 'Vec2', x?: any | null, y?: any | null } | null } | { __typename: 'Game', game_id?: any | null, over?: any | null, seed?: any | null } | { __typename: 'Map', game_id?: any | null, length?: any | null, width?: any | null } | { __typename: 'Moves', remaining?: any | null, last_direction?: any | null } | { __typename: 'Tile', game_id?: any | null, index?: any | null, _type?: any | null, x?: any | null, y?: any | null } | { __typename: 'Wind', game_id?: any | null, x?: any | null, y?: any | null, wx?: any | null, wy?: any | null, force?: any | null } | null> | null } | null } | null> | null } | null };
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
 
 
 export const GetEntitiesDocument = gql`
@@ -855,42 +765,10 @@ export const GetEntitiesDocument = gql`
             last_direction
           }
           ... on Boat {
-<<<<<<< HEAD
             position_x
             position_y
             dx
             dy
-          }
-          ... on Game {
-            game_id
-            over
-            seed
-          }
-          ... on Map {
-            game_id
-            length
-            width
-          }
-          ... on Tile {
-            game_id
-            index
-            _type
-            x
-            y
-          }
-          ... on Wind {
-            game_id
-            x
-            y
-            wx
-            wy
-            force
-=======
-            vec {
-              x
-              y
-            }
->>>>>>> 565150ce0f37756286192e5623d2fa9ab7417228
           }
           ... on Game {
             game_id
