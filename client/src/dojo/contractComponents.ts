@@ -25,15 +25,93 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          vec: {
-            x: RecsType.Number,
-            y: RecsType.Number
-          }
+          position_x: RecsType.BigInt,
+          position_y: RecsType.BigInt,
+          dx: RecsType.BigInt,
+          dy: RecsType.BigInt,
+          // vec: {
+          //   x: RecsType.BigInt,
+          //   y: RecsType.BigInt
+          // },
+          // direction: {
+          //   x: RecsType.BigInt,
+          //   y: RecsType.BigInt
+          // }
         },
         {
           metadata: {
             name: name,
-            types: ["Vec2"],
+            types: ["BigInt", "BigInt", "BigInt", "BigInt"],
+            // types: ["Vec2", "Vec2"],
+          },
+        }
+      );
+    })(),
+    Game: (() => {
+      const name = 'Game';
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          over: RecsType.Number,
+          seed: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u32", "u8", "u32"],
+          },
+        }
+      );
+    })(),
+    Tile: (() => {
+      const name = 'Tile';
+      return defineComponent(
+        world,
+        {
+          _type: RecsType.Number,
+          x: RecsType.Number,
+          y: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u32", "u32", "u32"],
+          },
+        }
+      );
+    })(),
+    Map: (() => {
+      const name = 'Map';
+      return defineComponent(
+        world,
+        {
+          length: RecsType.Number,
+          width: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u32", "u32"],
+          },
+        }
+      );
+    })(),
+    Wind: (() => {
+      const name = 'Wind';
+      return defineComponent(
+        world,
+        {
+          x: RecsType.Number,
+          y: RecsType.Number,
+          wx: RecsType.Number,
+          wy: RecsType.Number,
+          force: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u32", "u32", "u32", "u32", "u32"],
           },
         }
       );

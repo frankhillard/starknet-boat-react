@@ -10,6 +10,7 @@ import { getEvents } from "@dojoengine/utils";
 import { getEvents, setComponentsFromEvents } from "@dojoengine/utils";
 import { Vec2 } from "../generated/graphql";
 import { TileType } from '../hooks/useComponentStates';
+import Boat from "../ui/Boat";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 let Number_of_holes = 0;
@@ -70,35 +71,45 @@ export function createSystemCalls(
         console.log("SPAWWWWN");
         const entityId = signer.address.toString() as EntityIndex;
 
-        const positionId = uuid();
-        Boat.addOverride(positionId, {
-            entity: entityId,
-            value: { x: 10, y: 10 },
-        });
+        // const positionId = uuid();
+        // Boat.addOverride(positionId, {
+        //     entity: entityId,
+        //     value: { x: 10, y: 10 },
+        // });
 
-        const movesId = uuid();
-        Moves.addOverride(movesId, {
-            entity: entityId,
-            value: { remaining: 10 },
-        });
+        // const movesId = uuid();
+        // Moves.addOverride(movesId, {
+        //     entity: entityId,
+        //     value: { remaining: 10 },
+        // });
 
         try {
             const tx = await execute(signer, "actions", 'spawn', []);
-            setComponentsFromEvents(contractComponents,
-                getEvents(
-                    await signer.waitForTransaction(tx.transaction_hash,
-                        { retryInterval: 100 }
-                    )
+            const events = getEvents(
+              await signer.waitForTransaction(tx.transaction_hash,
+                  { retryInterval: 100 }
                 )
             );
+            console.log('spawnevents', events);
+            const transformed_events = await setComponentsFromEvents(contractComponents, events);
+            // setComponentsFromEvents(contractComponents, events);
+            await executeEvents(transformed_events, undefined, undefined, undefined);
+
+            // setComponentsFromEvents(contractComponents,
+            //     getEvents(
+            //         await signer.waitForTransaction(tx.transaction_hash,
+            //             { retryInterval: 100 }
+            //         )
+            //     )
+            // );
 
         } catch (e) {
             console.log(e)
-            Boat.removeOverride(positionId);
-            Moves.removeOverride(movesId);
+            // Boat.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
         } finally {
-            Boat.removeOverride(positionId);
-            Moves.removeOverride(movesId);
+            // Boat.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
         }
     };
 
@@ -108,11 +119,13 @@ export function createSystemCalls(
     ) => {
         const entityId = signer.address.toString() as EntityIndex;
         console.log("MOOOOVE");
-        const positionId = uuid();
-        Boat.addOverride(positionId, {
-            entity: entityId,
-            value: updatePositionWithDirection(direction, getComponentValue(Boat, entityId)),
-        });
+        const boat = getComponentValue(Boat, entityId);
+        console.log('boat', entityId, boat);
+        // const positionId = uuid();
+        // Boat.addOverride(positionId, {
+        //     entity: entityId,
+        //     value: updatePositionWithDirection(direction, getComponentValue(Boat, entityId)),
+        // });
 
         const movesId = uuid();
         Moves.addOverride(movesId, {
@@ -130,15 +143,42 @@ export function createSystemCalls(
             console.log('moveevents', events);
             const transformed_events = await setComponentsFromEvents(contractComponents, events);
             // setComponentsFromEvents(contractComponents, events);
-            await executeEvents(transformed_events, undefined, undefined);
+            await executeEvents(transformed_events, undefined, undefined, undefined);
 
         } catch (e) {
             console.log(e)
-            Boat.removeOverride(positionId);
+            // Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
         } finally {
-            Boat.removeOverride(positionId);
+            // Boat.removeOverride(positionId);
             Moves.removeOverride(movesId);
+        }
+
+    };
+
+    const turn = async (
+      signer: Account, 
+      angle: number, 
+    ) => {
+        const entityId = signer.address.toString() as EntityIndex;
+        console.log("TUUURN");
+
+        try {
+            const tx = await execute(signer, "actions", "turn", [angle]);
+            const events = getEvents(
+              await signer.waitForTransaction(tx.transaction_hash,
+                  { retryInterval: 100 }
+                )
+            );
+            console.log('turnevents', events);
+            const transformed_events = await setComponentsFromEvents(contractComponents, events);
+            // setComponentsFromEvents(contractComponents, events);
+            await executeEvents(transformed_events, undefined, undefined, undefined);
+
+        } catch (e) {
+            console.log(e)
+        } finally {
+          console.log('turn end')
         }
 
     };
@@ -146,7 +186,8 @@ export function createSystemCalls(
     return {
         create,
         spawn,
-        move
+        move, 
+        turn 
     };
 }
 
@@ -195,33 +236,34 @@ export async function executeEvents(
     // set_hit_mob: (mob: MobType) => void,
     // set_turn: (mob: TileType) => void
   ) {
+    // GAME events
     const gameEvents = events.filter((e): e is GameEvent & ComponentData => e.type === 'Game');
-    // console.log('gameEvents', gameEvents);
+    console.log('gameEvents', gameEvents);
     for (const e of gameEvents) {
       setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
+    // BOAT events
     const boatEvents = events.filter((e): e is BoatEvent & ComponentData => e.type === 'Boat');
     // console.log('boatEvents', boatEvents);
     for (const e of boatEvents) {
-      // set_position(e.vec.x, e.vec.y);
-      console.log('[executeEvents] Boat', e.entityIndex, e.componentValues);
-      setComponent(e.component, e.entityIndex, e.componentValues);
+      // const result = getComponentValue(e.component, `0x${e.player}`);
+      // console.log('[executeEvents] Boat component before', result);
+      console.log('[executeEvents] Boat', e.component, e.entityIndex, e.componentValues, e);
+      // console.log('[executeEvents] Boat', {vec: {x: e.vec.x, y: e.vec.y}, direction: {x: e.direction.x, y: e.direction.y} });
+      // setComponent(e.component, e.entityIndex, {vec: {x: e.vec.x, y: e.vec.y}, direction: {x: e.direction.x, y: e.direction.y} });
+      setComponent(e.component, `0x${e.player}`, {position_x: e.vec.x, position_y: e.vec.y, dx: e.direction.x, dy: e.direction.y });
     }
 
+    // MAP events
     const mapEvents = events.filter((e): e is MapEvent & ComponentData => e.type === 'Map');
-    // console.log('mapEvents', mapEvents);
     for (const e of mapEvents) {
         console.log("[executeEvents] SET SIZE", e.size);
         set_size(e.size);
-  
-    //   Map_size = e.size;
-    //   if (e.spawn === 0) {
-    //     reset_holes();
-    //   }
         setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
+    // TILE (ground) events
     const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
     // console.log('tileEvents', tileEvents);
     for (const e of tileEvents) {
@@ -320,6 +362,7 @@ export async function executeEvents(
     type: 'Boat';
     player: string;
     vec: Vec2;
+    direction: Vec2;
   };
 
   
@@ -329,14 +372,15 @@ export async function executeEvents(
   ): Omit<BoatEvent, 'component' | 'componentValues' | 'entityIndex'> {
     console.log("handleBoatEvent", values);
     const [player] = keys.map((k) => k.toString(16));
-    const [x, y] = values.map((v) => Number(v));
+    const [x, y, dir_x, dir_y] = values.map((v) => BigInt(v));
     console.log(
-      `[Boat: KEYS: (player: ${player}) - VALUES: (x: ${x}, y: ${y} )]`
+      `[Boat: KEYS: (player: ${player}) - VALUES: (x: ${x}, y: ${y}, dir_x: ${dir_x}, dir_y: ${dir_y} )]`
     );
     return {
       type: 'Boat',
       player,
       vec: {x: x, y: y},
+      direction: {x: dir_x, y: dir_y},
     };
   }
 

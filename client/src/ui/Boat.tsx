@@ -20,6 +20,7 @@ interface BoatProps {
   isHovered: boolean;
   health: number;
   position?: Coordinate;
+  direction?: Coordinate;
 }
 
 function lerp(start: number, end: number, t: number) {
@@ -52,6 +53,7 @@ const Boat: React.FC<BoatProps> = ({
   isHovered,
   health,
   position,
+  direction
 }) => {
   // console.log("Draw Boat", position, targetPosition);
 //   const [animation, setAnimation] = useState<Animation>(Animation.Idle);
@@ -223,6 +225,20 @@ const Boat: React.FC<BoatProps> = ({
 //     return null;
 //   }
   // console.log("absolutePosition", absolutePosition);
+  // const rotation = 90;
+  let angle_result = 0;
+    // console.log("direction", direction);
+  if (direction.x !== 0 && direction.y !== 0) {
+    const south = {x: 0, y:1};
+    const prod = south.x * direction.x + south.y * direction.y;
+    const south_norm = Math.sqrt(south.x * south.x + south.y * south.y);
+    const direction_norm = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+    // console.log("cos", prod /(south_norm * direction_norm));
+    const angle_result_rad = Math.acos(prod /(south_norm * direction_norm))
+    // console.log("angle_result_rad", angle_result_rad);
+    angle_result = angle_result_rad * 360 / Math.PI
+  }
+
   return (
     <>
     <Sprite
@@ -230,6 +246,7 @@ const Boat: React.FC<BoatProps> = ({
           image={boatpic}
           anchor={0.5}
           scale={0.5}
+          angle={angle_result}
           x={to_center(position).x}
           y={to_center(position).y}
         />

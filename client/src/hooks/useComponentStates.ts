@@ -53,22 +53,21 @@ export const useComponentStates = () => {
   // console.log('[useComponentSates] game', game);
 
   useEffect(() => {
-    // console.log('[useComponentSates] game (use effect)', game);
+    console.log('[useComponentSates] game (use effect)', game);
   }, [game]);
   
   // ===================================================================================================================
   // MAP
-
-  const entityId2 = "0x0" as EntityIndex; //game?.game_id as EntityIndex;
+  const entityId2 = 0x0 as EntityIndex; //game?.game_id as EntityIndex;
   // console.log('[useComponentSates] entityId2', entityId2);
-
   const map = useComponentValue(Map, entityId2);
-  // useEffect(() => {
-  //   // console.log('[useComponentSates] map (use effect)', map);
-  //   if (map !== undefined)
-  //     set_size(map.length);
-  // }, [map]);
+  useEffect(() => {
+    console.log('[useComponentSates] map (use effect)', map);
+  }, [map]);
   // console.log('[useComponentSates] map', map);
+
+
+
 
 // ===================================================================================================================
   // Tile
@@ -94,17 +93,69 @@ export const useComponentStates = () => {
   );
 
   useEffect(() => {
-    // console.log('[useComponentSates] boat (use effect)', boat);
-    // if (boat !== undefined)
-    //   set_position(boat?.vec);
+    console.log('[useComponentSates] boat (use effect)', boat);
+    const prime = BigInt("3618502788666131213697322783095070105623107215331596699973092056135872020480");
+    
+    if (boat !== undefined) {
+      const boat_position = {
+        x: boat.position_x / BigInt(Math.pow(2, 64)), 
+        y: boat.position_y / BigInt(Math.pow(2, 64))
+      };
+      console.log('retrieve boat position (use effect)', boat_position);
+      // const boat_direction = (boat !== undefined) ? {
+      //   x: boat.dx / BigInt(Math.pow(2, 64)), 
+      //   y: boat.dy / BigInt(Math.pow(2, 64))} : {x: 0, y: 1};
+
+      // console.log('retrieve boat direction (use effect)', boat_direction);
+    }
+      // set_position(boat?.vec);
   }, [boat]);
 
-  const boat_position = (boat !== undefined) ? boat.vec : {x: 0, y: 0};
+  // console.log('[useComponentSates] boat ', boat);
+  // if (boat !== undefined) {
+  // const tt = boat.position_x / BigInt(Math.pow(2, 64));
+  // console.log("tt", tt);
+  // }
+
+  // translate bigint (felt) to number (float)
+  const boat_position = (boat !== undefined) ? {
+      x: boat.position_x / BigInt(Math.pow(2, 64)), 
+      y: boat.position_y / BigInt(Math.pow(2, 64))} : {x: 0, y: 0};
+
+  const prime = BigInt("3618502788666131213697322783095070105623107215331596699973092056135872020480");
+  let boat_direction = {x: 0, y: 1};
+  if (boat !== undefined) {
+    let direction_x = undefined;
+    if (boat.dx > BigInt(Math.pow(2, 128))) {
+      let number = (prime - boat.dx) / BigInt(Math.pow(2, 64));
+      // let mag = (prime - boat.dx).toString(16);
+      // console.log('boat.dx', boat.dx.toString(16));
+      // console.log('number', number);
+      // console.log('BOAT DX', 0 - Number(number));
+      direction_x = 0 - Number(number);
+    } else {
+      direction_x = Number(boat.dx / BigInt(Math.pow(2, 64)));
+    }
+    let direction_y = undefined;
+    if (boat.dy > BigInt(Math.pow(2, 128))) {
+      let number = (prime - boat.dy) / BigInt(Math.pow(2, 64));
+      // let mag = (prime - boat.dx).toString(16);
+      // console.log('number', number);
+      // console.log('BOAT DY', 0 - Number(number));
+      direction_y = 0 - Number(number);
+    } else {
+      direction_y = Number(boat.dy / BigInt(Math.pow(2, 64)));
+    }
+    boat_direction = {
+      x: direction_x, 
+      y: direction_y
+    }
+  }
 
   return {
     game: { id: game?.game_id, over: game?.over, seed: game?.seed },
-    map: { level: 0, size: 4, spawn: 0, score: 0, over: 0, name: "toto" },
+    map: { level: 0, size: 8, spawn: 0, score: 0, over: 0, name: "toto" },
     // map: { level: map?.level, size: map?.size, spawn: map?.spawn, score: map?.score, over: map?.over, name: map?.name },
-    boat: createBoat('classic', 1000, boat_position),
+    boat: createBoat('classic', 1000, boat_position, boat_direction),
   };
 };
