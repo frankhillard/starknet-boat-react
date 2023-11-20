@@ -12,7 +12,7 @@ import { useElementStore } from './utils/store';
 function App() {
   const {
     setup: {
-      systemCalls: { spawn, move },
+      systemCalls: { spawn, move, turn },
       components,
       network: { graphSdk, contractComponents }
     },
@@ -44,6 +44,7 @@ function App() {
       try {
         const { data } = await getEntities();
         if (data && data.entities) {
+          console.log("[App] fetching data:", data.entities.edges);
           setComponentsFromGraphQLEntities(contractComponents, data.entities.edges);
         }
       } catch (error) {
@@ -92,10 +93,8 @@ function App() {
         <div>Position: {position && position.vec ? `${position?.vec['x']}, ${position?.vec['y']}` : 'Need to Spawn'}</div>
       </div>
       <div className="card">
-        <button onClick={() => move(account, Direction.Up)}>Move Up</button> <br />
-        <button onClick={() => move(account, Direction.Left)}>Move Left</button>
-        <button onClick={() => move(account, Direction.Right)}>Move Right</button> <br />
-        <button onClick={() => move(account, Direction.Down)}>Move Down</button>
+        <button onClick={() => move(account, Direction.Up)}>Step</button> <br />
+        <button onClick={() => turn(account, 45)}>Turn</button> <br />
       </div>
     </>
   );

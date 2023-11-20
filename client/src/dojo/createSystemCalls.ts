@@ -119,6 +119,8 @@ export function createSystemCalls(
     ) => {
         const entityId = signer.address.toString() as EntityIndex;
         console.log("MOOOOVE");
+        const boat = getComponentValue(Boat, entityId);
+        console.log('boat', entityId, boat);
         // const positionId = uuid();
         // Boat.addOverride(positionId, {
         //     entity: entityId,
@@ -141,7 +143,7 @@ export function createSystemCalls(
             console.log('moveevents', events);
             const transformed_events = await setComponentsFromEvents(contractComponents, events);
             // setComponentsFromEvents(contractComponents, events);
-            await executeEvents(transformed_events, undefined, undefined);
+            await executeEvents(transformed_events, undefined, undefined, undefined);
 
         } catch (e) {
             console.log(e)
@@ -154,10 +156,38 @@ export function createSystemCalls(
 
     };
 
+    const turn = async (
+      signer: Account, 
+      angle: number, 
+    ) => {
+        const entityId = signer.address.toString() as EntityIndex;
+        console.log("TUUURN");
+
+        try {
+            const tx = await execute(signer, "actions", "turn", [angle]);
+            const events = getEvents(
+              await signer.waitForTransaction(tx.transaction_hash,
+                  { retryInterval: 100 }
+                )
+            );
+            console.log('turnevents', events);
+            const transformed_events = await setComponentsFromEvents(contractComponents, events);
+            // setComponentsFromEvents(contractComponents, events);
+            await executeEvents(transformed_events, undefined, undefined, undefined);
+
+        } catch (e) {
+            console.log(e)
+        } finally {
+          console.log('turn end')
+        }
+
+    };
+
     return {
         create,
         spawn,
-        move
+        move, 
+        turn 
     };
 }
 
@@ -206,39 +236,34 @@ export async function executeEvents(
     // set_hit_mob: (mob: MobType) => void,
     // set_turn: (mob: TileType) => void
   ) {
+    // GAME events
     const gameEvents = events.filter((e): e is GameEvent & ComponentData => e.type === 'Game');
-    // console.log('gameEvents', gameEvents);
+    console.log('gameEvents', gameEvents);
     for (const e of gameEvents) {
       setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
+    // BOAT events
     const boatEvents = events.filter((e): e is BoatEvent & ComponentData => e.type === 'Boat');
-    console.log('boatEvents', boatEvents);
+    // console.log('boatEvents', boatEvents);
     for (const e of boatEvents) {
-      // set_position(e.vec.x, e.vec.y);
-      console.log('[executeEvents] Boat', e.entityIndex, e.componentValues, e);
+      // const result = getComponentValue(e.component, `0x${e.player}`);
+      // console.log('[executeEvents] Boat component before', result);
+      console.log('[executeEvents] Boat', e.component, e.entityIndex, e.componentValues, e);
       // console.log('[executeEvents] Boat', {vec: {x: e.vec.x, y: e.vec.y}, direction: {x: e.direction.x, y: e.direction.y} });
       // setComponent(e.component, e.entityIndex, {vec: {x: e.vec.x, y: e.vec.y}, direction: {x: e.direction.x, y: e.direction.y} });
-      setComponent(e.component, e.entityIndex, {position_x: e.vec.x, position_y: e.vec.y, dx: e.direction.x, dy: e.direction.y });
-      // setComponent(e.component, e.entityIndex, e.componentValues);
-
-      // const result = getComponentValue(Boat, e.entityIndex);
-      // console.log('[executeEvents] verify Boat', result);
+      setComponent(e.component, `0x${e.player}`, {position_x: e.vec.x, position_y: e.vec.y, dx: e.direction.x, dy: e.direction.y });
     }
 
+    // MAP events
     const mapEvents = events.filter((e): e is MapEvent & ComponentData => e.type === 'Map');
-    // console.log('mapEvents', mapEvents);
     for (const e of mapEvents) {
         console.log("[executeEvents] SET SIZE", e.size);
         set_size(e.size);
-  
-    //   Map_size = e.size;
-    //   if (e.spawn === 0) {
-    //     reset_holes();
-    //   }
         setComponent(e.component, e.entityIndex, e.componentValues);
     }
   
+    // TILE (ground) events
     const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
     // console.log('tileEvents', tileEvents);
     for (const e of tileEvents) {

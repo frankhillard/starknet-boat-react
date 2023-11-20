@@ -123,16 +123,16 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     useEffect(() => {
       if (mapState.spawn === 0) {
         // spawn(account, ip, add_hole, set_size, reset_holes, set_hit_mob, set_turn);
-        console.log("AUTO SPAWN !!")
-        spawn(account);
+        // console.log("AUTO SPAWN !!")
+        // spawn(account);
       }
     }, [mapState.spawn]); 
   
 
     useEffect(() => {
-      // if (boat !== undefined) {
-      //   console.log("[CANVAS] boat (use efect)", boat);
-      // }
+      if (boat !== undefined) {
+        // console.log("[CANVAS] boat (use efect)", boat);
+      }
     }, [boat]);
     // const { knightNeighbors, barbarianNeighbors, bowmanNeighbors, wizardNeighbors } = useGrid(grid);
   
@@ -150,9 +150,9 @@ const Canvas: React.FC<CanvasProps> = ({ setMusicPlaying }) => {
     // since the centre of tile_0_0 is at absolute position (100, 100), we set an offset of (-1,-1)
     const boat_position = { x: (Number(boat.position.x) / 100) - 1, y: (Number(boat.position.y) / 100) - 1 };
     const boat_position_screen = to_screen_coordinate(boat_position);    
-    // console.log("[Canvas] BOAT ", boat_position); //, boat_position_screen);
+    // console.log("[Canvas] BOAT ", boat, boat_position, boat_position_screen);
     const boat_direction = { x: Number(boat.direction.x), y: Number(boat.direction.y) };
-  // console.log("[Canvas] BOAT ", boat_direction); //, boat_position_screen);
+  // console.log("[Canvas] BOAT ", boat, boat_direction); //, boat_position_screen);
 
     return (
         <div style={{ position: 'relative' }}>

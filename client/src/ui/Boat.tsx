@@ -244,7 +244,7 @@ const Boat: React.FC<BoatProps> = ({
     <Sprite
           key={`boat`}
           image={boatpic}
-          anchor={0}
+          anchor={0.5}
           scale={0.5}
           angle={angle_result}
           x={to_center(position).x}

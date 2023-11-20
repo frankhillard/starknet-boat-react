@@ -535,29 +535,6 @@ mod tests {
         // [1 3] * [cos(90) -sin(90)] = [1 3] * [0 -1] = -3
         // let halfsqrt2 = FixedTrait::new(13043817825332782214_u128, false);
         let expected_x: Fixed = FixedTrait::new_unscaled(3_u128, true);
-        // let expected_x_felt : felt252 = expected_x.into();
-        // 'expected_x_felt'.print();
-        // expected_x_felt.print();
-        // 0x800000000000010ffffffffffffffffffffffffffffffffffffffffffffffff
-        // let three = FixedTrait::new_unscaled(3_u128, false); 
-        // let three_felt : felt252 = three.into();
-        // 'three_felt'.print();
-        // three_felt.print();
-        // let mone : felt252 = -1;
-        // 'mone'.print();
-        // mone.print();
-        // let mthree = three_felt * mone;
-        // 'mthree'.print();
-        // mthree.print();
-
-        // let zero = mone + 1;
-        // 'zero'.print();
-        // zero.print();
-        // let result = mone - expected_x_felt + 1;
-        // 'result'.print();
-        // result.print();
-
-
         let cdx: Fixed = FixedTrait::from_felt(new_boat.dx);
         let diff = cdx - expected_x;
         // almost the same at a precision of 5/2^64 
